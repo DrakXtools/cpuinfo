@@ -282,7 +282,7 @@ char *cpuinfo_arch_get_model(struct cpuinfo *cip)
 	char *model = (char *)malloc(model_length);
 	if (model) {
 	  if (codename)
-		sprintf(model, "%s '%s'", name, codename);
+		sprintf("%s","%s", model, "%s '%s'", name, codename);
 	  else
 		strcpy(model, name);
 	}

@@ -285,9 +285,9 @@ static char *get_model_amd_npt(struct cpuinfo *cip)
 	  char *model = (char *)malloc(64);
 	  if (model) {
 		if (model_number)
-		  sprintf(model, mp->name, model_number);
+		  sprintf("%s", model, mp->name, model_number);
 		else
-		  sprintf(model, mp->name);
+		  sprintf("%s", model, mp->name);
 	  }
 	  return model;
 	}
@@ -413,9 +413,9 @@ static char *get_model_amd_k8(struct cpuinfo *cip)
   char *model = (char *)malloc(64);
   if (model) {
 	if (model_number)
-	  sprintf(model, name, model_number);
+	  sprintf("%s", model, name, model_number);
 	else
-	  sprintf(model, name);
+	  sprintf("%s", model, name);
   }
 
   return model;

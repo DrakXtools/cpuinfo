@@ -28,12 +28,31 @@
 #define DEBUG 1
 #include "debug.h"
 
+static int cpuinfo_has_cpuid()
+{
+  unsigned long a, c;
+  __asm__ __volatile__ ("pushf\n\t"
+						"pop %0\n\t"
+						"mov %0, %1\n\t"
+						"xor $0x200000, %0\n\t"
+						"push %0\n\t"
+						"popf\n\t"
+						"pushf\n\t"
+						"pop %0\n\t"
+						: "=a" (a), "=c" (c)
+						:: "cc");
+
+  return a != c;
+}
+
 static void cpuid(uint32_t op, uint32_t *eax, uint32_t *ebx, uint32_t *ecx, uint32_t *edx)
 {
   uint32_t a = eax ? *eax : 0;
   uint32_t b = ebx ? *ebx : 0;
   uint32_t c = ecx ? *ecx : 0;
   uint32_t d = edx ? *edx : 0;
+  if(!cpuinfo_has_cpuid())
+	return;
 
 #if defined __i386__
   __asm__ __volatile__ ("xchgl	%%ebx,%0\n\t"
@@ -1124,6 +1143,10 @@ uint32_t *cpuinfo_arch_feature_table(struct cpuinfo *cip, int feature)
 // Returns 1 if CPU supports the specified feature
 int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 {
+  int has_cpuid = cpuinfo_has_cpuid();
+  if(feature == CPUINFO_FEATURE_X86_CPUID || !has_cpuid)
+	return has_cpuid;
+
   if (!cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_X86)) {
 	cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_X86);
 

@@ -1152,14 +1152,62 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 
 	uint32_t eax, ecx, edx;
 	cpuid(1, NULL, NULL, &ecx, &edx);
+	if (edx & (1 << 0))
+	    feature_set_bit(FPU);
+	if (edx & (1 << 1))
+	    feature_set_bit(VME);
+	if (edx & (1 << 2))
+	    feature_set_bit(DE);
+	if (edx & (1 << 3))
+	    feature_set_bit(PSE);
+	if (edx & (1 << 4))
+	    feature_set_bit(TSC);
+	if (edx & (1 << 5))
+	    feature_set_bit(MSR);
+	if (edx & (1 << 6))
+	    feature_set_bit(PAE);
+	if (edx & (1 << 7))
+	    feature_set_bit(MCE);
+	if (edx & (1 << 8))
+	    feature_set_bit(CX8);
+	if (edx & (1 << 9))
+	    feature_set_bit(APIC);
+	if (edx & (1 << 11))
+	    feature_set_bit(SEP);
+	if (edx & (1 << 12))
+	    feature_set_bit(MTRR);
+	if (edx & (1 << 13))
+	    feature_set_bit(PGE);
+	if (edx & (1 << 14))
+	    feature_set_bit(MCA);
 	if (edx & (1 << 15))
 	  feature_set_bit(CMOV);
+	if (edx & (1 << 16))
+	  feature_set_bit(PAT);
+	if (edx & (1 << 17))
+	  feature_set_bit(PSE_36);
+	if (edx & (1 << 18))
+	  feature_set_bit(CLFSH);
+	if (edx & (1 << 19))
+	  feature_set_bit(CLFSH);
+	if (edx & (1 << 21))
+	  feature_set_bit(DS);
+	if (edx & (1 << 22))
+	  feature_set_bit(ACPI);
 	if (edx & (1 << 23))
 	  feature_set_bit(MMX);
+	if (edx & (1 << 24))
+	  feature_set_bit(FXSR);
 	if (edx & (1 << 25))
 	  feature_set_bit(SSE);
 	if (edx & (1 << 26))
 	  feature_set_bit(SSE2);
+	if (edx & (1 << 27))
+	  feature_set_bit(SS);
+	if (edx & (1 << 28))
+	  feature_set_bit(HTT);	
+	if (edx & (1 << 31))
+	  feature_set_bit(PBE);	
 	if (ecx & (1 << 0))
 	  feature_set_bit(SSE3);
 	if (ecx & (1 << 9))
@@ -1178,6 +1226,12 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 	  feature_set_bit(TM2);
 	if (ecx & (1 << 7))
 	  feature_set_bit(EIST);
+	if (ecx & (1 << 3))
+	  feature_set_bit(MONITOR);
+	if (ecx & (1 << 4))
+	  feature_set_bit(DS_CPL);
+	if (ecx & (1 << 10))
+	  feature_set_bit(CNXT_ID);
 
 	cpuid(0x80000000, &eax, NULL, NULL, NULL);
 	if ((eax & 0xffff0000) == 0x80000000 && eax >= 0x80000001) {

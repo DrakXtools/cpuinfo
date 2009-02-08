@@ -1145,7 +1145,7 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 {
   if (!cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_X86)) {
 	cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_X86);
-      	if(cpuinfo_has_cpuid()) {
+	if(cpuinfo_has_cpuid()) {
 	    feature_set_bit(CPUID);
     
 	    uint32_t eax, ecx, edx;

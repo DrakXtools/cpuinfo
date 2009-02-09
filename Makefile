@@ -148,6 +148,7 @@ ifeq (yes,$(findstring yes,$(build_static) $(build_shared)))
 endif
 ifeq ($(install_sdk),yes)
 	mkdir -p $(DESTDIR)$(includedir)
+	mkdir -p $(DESTDIR)$(libdir)/pkgconfig
 endif
 
 install.bins: $(cpuinfo_PROGRAM)
@@ -171,6 +172,7 @@ endif
 ifeq ($(install_sdk),yes)
 install.headers:
 	$(INSTALL) -m 644 $(SRC_PATH)/src/cpuinfo.h $(DESTDIR)$(includedir)/
+	$(INSTALL) -m 644 $(SRC_PATH/libcpuinf.pc $(DESTDIR)$(libdir)/pkgconfig
 else
 install.headers:
 endif

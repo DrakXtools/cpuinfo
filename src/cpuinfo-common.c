@@ -367,6 +367,7 @@ static const int n_common_feature_strings = sizeof(common_feature_strings) / siz
 
 static const cpuinfo_feature_string_t x86_feature_strings[] = {
   DEFINE_(X86,			"[x86]",	"-- x86-specific features --"						),
+  DEFINE_(X86_AC,		"ac",		"Alignment Check"),
   DEFINE_(X86_CPUID,		"cpuid",	"CPU Identificaion"),
   DEFINE_(X86_FPU,		"fpu",		"Floating Point Unit On-Chip"),
   DEFINE_(X86_VME,		"vme",		"Virtual 8086 Mode Enhancements"),

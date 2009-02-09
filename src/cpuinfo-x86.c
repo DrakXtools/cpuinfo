@@ -28,6 +28,23 @@
 #define DEBUG 1
 #include "debug.h"
 
+static int cpuinfo_has_ac()
+{
+  unsigned long a, c;
+  __asm__ __volatile__ ("pushf\n\t"
+						"pop %0\n\t"
+						"mov %0, %1\n\t"
+						"xor $0x40000, %0\n\t"
+						"push %0\n\t"
+						"popf\n\t"
+						"pushf\n\t"
+						"pop %0\n\t"
+						: "=a" (a), "=c" (c)
+						:: "cc");
+
+  return a != c;
+}
+
 static int cpuinfo_has_cpuid()
 {
   unsigned long a, c;
@@ -1145,6 +1162,8 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 {
   if (!cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_X86)) {
 	cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_X86);
+	if(cpuinfo_has_ac())
+	    feature_set_bit(AC);
 	if(cpuinfo_has_cpuid()) {
 	    feature_set_bit(CPUID);
     

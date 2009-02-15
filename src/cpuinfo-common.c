@@ -418,9 +418,19 @@ static const cpuinfo_feature_string_t x86_feature_strings[] = {
   DEFINE_(X86_TM2,		"tm2",		"Thermal Monitor 2"									),
   DEFINE_(X86_EIST,		"eist",		"Enhanced Intel Speedstep Technology"				),
   DEFINE_(X86_NX,		"nx",		"No eXecute (AMD NX) / Execute Disable (Intel XD)"	),
+  DEFINE_(X86_DTES64,		"dtes64",	"64-bit DS Area"),
   DEFINE_(X86_MONITOR,		"monitor",	"MONITOR/MWAIT"),
   DEFINE_(X86_DS_CPL,		"ds-cpl",	"CPL Qualified Debug Store"),
+  DEFINE_(X86_SMX,		"smx",		"Safer Mode Extensions"),
   DEFINE_(X86_CNXT_ID,		"cnxt-id",	"L1 Context ID"),
+  DEFINE_(X86_CMPXCHG16B,	"cmpxchg16b",	"CMPCXHG16B Instruction"),
+  DEFINE_(X86_XTPRUC,		"xtpruc",	"xTPR Update Conrol"),
+  DEFINE_(X86_PDCM,		"pdcm",		"Perfmon and Debug Capability"),
+  DEFINE_(X86_DCA,		"dca",		"Supports prefetching from memory mapped device"),
+  DEFINE_(X86_X2APIC,		"x2apic",	"Supports x2APIC"),
+  DEFINE_(X86_MOVBE,		"movbe",	"MOVBE instruction"),
+  DEFINE_(X86_XSAVE,		"xsave",	"Supports XSAVE/XRSTOR instructions"),
+  DEFINE_(X86_OSXSAVE,		"osxsave",	"Supports OSXSAVE/OSXRSTOR instructions"),
 };
 
 static const int n_x86_feature_strings = sizeof(x86_feature_strings) / sizeof(x86_feature_strings[0]);

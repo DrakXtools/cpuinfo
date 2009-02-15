@@ -1243,12 +1243,32 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 		feature_set_bit(TM2);
 	    if (ecx & (1 << 7))
 		feature_set_bit(EIST);
+	    if (ecx & (1 << 2))
+		feature_set_bit(DTES64);
 	    if (ecx & (1 << 3))
 		feature_set_bit(MONITOR);
 	    if (ecx & (1 << 4))
 		feature_set_bit(DS_CPL);
+	    if (ecx & (1 << 6))
+		feature_set_bit(SMX);
 	    if (ecx & (1 << 10))
 		feature_set_bit(CNXT_ID);
+	    if (ecx & (1 << 13))
+		feature_set_bit(CMPXCHG16B);
+	    if (ecx & (1 << 14))
+		feature_set_bit(XTPRUC);
+	    if (ecx & (1 << 15))
+		feature_set_bit(PDCM);
+	    if (ecx & (1 << 18))
+		feature_set_bit(DCA);
+	    if (ecx & (1 << 21))
+		feature_set_bit(X2APIC);
+	    if (ecx & (1 << 22))
+		feature_set_bit(MOVBE);
+	    if (ecx & (1 << 26))
+		feature_set_bit(XSAVE);
+	    if (ecx & (1 << 27))
+		feature_set_bit(OSXSAVE);
 
 	    cpuid(0x80000000, &eax, NULL, NULL, NULL);
 	    if ((eax & 0xffff0000) == 0x80000000 && eax >= 0x80000001) {

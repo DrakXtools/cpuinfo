@@ -31,7 +31,7 @@ version_define = [('VERSION', '"%s"' % version)]
 
 c_files = ['CPUInfo.c']
 
-compile_args = []
+compile_args = ['-std=gnu99']
 warnflags = ['-Wall', '-Wextra', '-pedantic']
 compile_args.extend(warnflags)
 link_args = ['-lcpuinfo']

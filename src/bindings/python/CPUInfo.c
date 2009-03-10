@@ -1,4 +1,5 @@
 #include "CPUInfo.h"
+#include <stdio.h>
 
 static const char __author__[] =
 "The pycpuinfo python module was written by:\n\
@@ -14,98 +15,144 @@ Initializes a CPUInfo object holding the cpuinfo descriptor for your CPU.");
 static int
 CPUInfo_init(CPUInfoObject *self)
 {
+    int i, j;
     self->cip = cpuinfo_new();
 
     if(self->cip == NULL){
 	PyErr_SetString(PyExc_RuntimeError, "couldn't create new cpuinfo descriptor.");
 	return -1;
     }
-    PyDict_SetItem(self->procInf, PyString_FromString("model", 
+
+    const cpuinfo_cache_t *ccp = cpuinfo_get_caches(self->cip);
+    self->caches = PyTuple_New(ccp->count);
+
+    if (ccp) {
+	for (i = 0; i < ccp->count; i++) {
+	    const cpuinfo_cache_descriptor_t *ccdp = &ccp->descriptors[i];
+
+	    PyObject *type;
+	    if (ccdp->level == 0 && ccdp->type == CPUINFO_CACHE_TYPE_TRACE)
+		type = PyString_FromString("Instruction trace cache");
+	    else
+		type = PyString_FromFormat("L%d %s cache", ccdp->level, cpuinfo_string_of_cache_type(ccdp->type));
+	    PyObject *cache = PyTuple_Pack(2, type, PyInt_FromLong(ccdp->size*1024));
+	    PyTuple_SetItem(self->caches, i, cache);
+	}
+    }
+
+    self->features = PyDict_New();    
+    PyObject *genFeats = PyDict_New();
+    PyObject *archFeats = PyDict_New();
+    PyDict_SetItemString(self->features, "general", genFeats);
+    PyDict_SetItemString(self->features, "architecture", archFeats);
+
+    static const struct {
+	int base;
+	int max;
+    } features_bits[] = {
+	{ CPUINFO_FEATURE_COMMON + 1, CPUINFO_FEATURE_COMMON_MAX },
+	{ CPUINFO_FEATURE_X86, CPUINFO_FEATURE_X86_MAX },
+	{ CPUINFO_FEATURE_IA64, CPUINFO_FEATURE_IA64_MAX },
+	{ CPUINFO_FEATURE_PPC, CPUINFO_FEATURE_PPC_MAX },
+	{ CPUINFO_FEATURE_MIPS, CPUINFO_FEATURE_MIPS_MAX },
+	{ -1, 0 }
+    };
+
+    for (i = 0; features_bits[i].base != -1; i++) {
+	int base = features_bits[i].base;
+	int count = features_bits[i].max - base;
+	for (j = 0; j < count; j++) {
+	    int feature = base + j;
+	    if (cpuinfo_has_feature(self->cip, feature)) {
+		const char *name = cpuinfo_string_of_feature(feature);
+		const char *detail = cpuinfo_string_of_feature_detail(feature);
+		if (name && detail)
+		{
+		    if(feature < CPUINFO_FEATURE_COMMON_MAX)
+			PyDict_SetItemString(genFeats, name, PyString_FromString(detail));
+		    else
+			PyDict_SetItemString(archFeats, name, PyString_FromString(detail));
+		}
+		else
+		    fprintf(stdout, "  %-10s No description for feature %08x\n", "<error>", feature);
+	    }
+	}
+    }
 
     return 0;
 
 }
 
-PyDoc_STRVAR(CPUInfo_getVendorID__doc__,
-"getVendorID() -> int\n\
-\n\
-Get processor vendor ID");
-
-static PyObject*
-CPUInfo_getVendorID(CPUInfoObject *self)
+static PyObject *
+CPUInfo_getVendorName(CPUInfoObject *self)
 {
-    return PyInt_FromLong(cpuinfo_get_vendor(self->cip));
+    cpuinfo_vendor_t vendorID = cpuinfo_get_vendor(self->cip);;
+
+    return PyString_FromFormat("%s", cpuinfo_string_of_vendor(vendorID));
 }
 
-static PyObject*
-CPUInfo_getVendorName(CPUInfoObject *self, PyObject *args)
-{
-    cpuinfo_vendor_t vendorID = CPUINFO_VENDOR_UNKNOWN;
-
-    if(!PyArg_ParseTuple(args, "|i", &vendorID))
-	return NULL;
-    if(vendorID == CPUINFO_VENDOR_UNKNOWN)
-	vendorID = cpuinfo_get_vendor(self->cip);
-
-    return PyString_FromFormat("%s\n", cpuinfo_string_of_vendor(vendorID));
-}
-
-static PyObject*
+static PyObject *
 CPUInfo_getModel(CPUInfoObject *self)
 {
-    return PyString_FromFormat("%s\n", cpuinfo_get_model(self->cip));
+    return PyString_FromFormat("%s", cpuinfo_get_model(self->cip));
 }
 
-static PyObject*
+static PyObject *
 CPUInfo_getFrequency(CPUInfoObject *self)
 {
     return PyInt_FromLong(cpuinfo_get_frequency(self->cip));
 }
 
-static PyObject*
+static PyObject *
 CPUInfo_getSocket(CPUInfoObject *self)
 {
     return PyInt_FromLong(cpuinfo_get_socket(self->cip));
 }
 
-static PyObject*
+static PyObject *
 CPUInfo_getCores(CPUInfoObject *self)
 {
     return PyInt_FromLong(cpuinfo_get_cores(self->cip));
 }
 
-static PyObject*
+static PyObject *
 CPUInfo_getThreads(CPUInfoObject *self)
 {
     return PyInt_FromLong(cpuinfo_get_threads(self->cip));
 }
 
-static PyObject*
+static PyObject *
 CPUInfo_getCacheTypes(CPUInfoObject *self)
 {
-    const cpuinfo_cache_t *ccp = cpuinfo_get_caches(self->cip);
-
-    PyObject *ccp_tuple = PyTuple_New(ccp->count);
-    int i;
-    for (i = 0; i < ccp->count; i++) {
-	const cpuinfo_cache_descriptor_t *ccdp = &ccp->descriptors[i];
-	PyTuple_SetItem(ccp_tuple, i, PyString_FromString(cpuinfo_string_of_cache_type(ccdp->type)));
-    }
-    return ccp_tuple;
+    return self->caches;
 }
 
-static PyMethodDef CPUInfoObject_methods[] = {
-    {"getVendorID", (PyCFunction)CPUInfo_getVendorID, 0,
-	CPUInfo_getVendorID__doc__},
-    {"getVendorName", (PyCFunction)CPUInfo_getVendorName, METH_VARARGS, NULL},
-    {"getModel", (PyCFunction)CPUInfo_getModel, 0, NULL},
-    {"getFrequency", (PyCFunction)CPUInfo_getFrequency, 0, NULL},
-    {"getSocket", (PyCFunction)CPUInfo_getSocket, 0, NULL},
-    {"getCores", (PyCFunction)CPUInfo_getCores, 0, NULL},
-    {"getThreads", (PyCFunction)CPUInfo_getThreads, 0, NULL},
-    {"getCacheTypes", (PyCFunction)CPUInfo_getCacheTypes, 0, NULL},
-    {0, 0, 0, 0}
+static PyObject *
+CPUInfo_getFeatures(CPUInfoObject *self)
+{
+    return self->features;
+}
+
+static PyGetSetDef CPUInfo_getset[] = {
+    {"caches|", (getter)CPUInfo_getCacheTypes, NULL,
+	"Processor caches", NULL},
+    {"cores", (getter)CPUInfo_getCores, NULL,
+	"Processor caches", NULL},
+    {"frequency", (getter)CPUInfo_getFrequency, NULL,
+	"Processor frequency", NULL},	
+    {"features", (getter)CPUInfo_getFeatures, NULL,
+	"general and architecture specific features", NULL},
+    {"model", (getter)CPUInfo_getModel, NULL,
+	"Processor model", NULL},
+    {"socket", (getter)CPUInfo_getSocket, NULL,
+	"Processor socket", NULL},	
+    {"threads", (getter)CPUInfo_getThreads, NULL,
+	"Processor threads", NULL},
+    {"vendorname", (getter)CPUInfo_getVendorName, NULL,
+	"Processor model", NULL},
+    {NULL, NULL, NULL, NULL, NULL}	/* Sentinel */
 };
+
 
 static PyObject *
 CPUInfoObject_new(PyTypeObject *type, __attribute__((unused)) PyObject *args, __attribute__((unused)) PyObject *kwargs)
@@ -116,7 +163,6 @@ CPUInfoObject_new(PyTypeObject *type, __attribute__((unused)) PyObject *args, __
 	Py_DECREF(self);
 	return NULL;
     }
-    self->procInf = PyDict_New();
 
     return (PyObject *)self;
 }
@@ -130,63 +176,63 @@ CPUInfo_dealloc(CPUInfoObject *self)
 }
 
 PyTypeObject CPUInfo_Type = {
-PyObject_HEAD_INIT(NULL)
+    PyObject_HEAD_INIT(NULL)
 	0,						/*ob_size*/
-	"CPUInfo.CPUInfo",				/*tp_name*/
-	sizeof(CPUInfoObject),				/*tp_basicsize*/
-	0,						/*tp_itemsize*/
-	(destructor)CPUInfo_dealloc,			/*tp_dealloc*/
-	0,						/*tp_print*/
-	0,						/*tp_getattr*/
-	0,						/*tp_setattr*/
-	0,						/*tp_compare*/
-	0,						/*tp_repr*/
-	0,						/*tp_as_number*/
-	0,						/*tp_as_sequence*/
-	0,						/*tp_as_mapping*/
-	0,						/*tp_hash*/
-	0,						/*tp_call*/
-	0,						/*tp_str*/
-	0,						/*tp_getattro*/
-	0,						/*tp_setattro*/
-	0,						/*tp_as_buffer*/
-	Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,		/*tp_flags*/
-	CPUInfo_init__doc__,         			/*tp_doc*/
-	0,						/*tp_traverse*/
-	0,						/*tp_clear*/
-	0,						/*tp_richcompare*/
-	0,						/*tp_weaklistoffset*/
-	0,						/*tp_iter*/
-	0,						/*tp_iternext*/
-	CPUInfoObject_methods,				/*tp_methods*/
-	0,						/*tp_members*/
-	0,						/*tp_getset*/
-	0,						/*tp_base*/
-	0,						/*tp_dict*/
-	0,						/*tp_descr_get*/
-	0,						/*tp_descr_set*/
-	0,						/*tp_dictoffset*/
-	(initproc)CPUInfo_init,				/*tp_init*/
-	PyType_GenericAlloc,				/*tp_alloc*/
-	CPUInfoObject_new,				/*tp_new*/
-	0,						/*tp_free*/
-	0,						/*tp_is_gc*/
-	0,						/*tp_bases*/
-	0,						/*tp_mro*/
-	0,						/*tp_cache*/
-	0,						/*tp_subclasses*/
-	0,						/*tp_weaklist*/
-	0,						/*tp_del*/
-	0
-    };
+    "CPUInfo.CPUInfo",				/*tp_name*/
+    sizeof(CPUInfoObject),				/*tp_basicsize*/
+    0,						/*tp_itemsize*/
+    (destructor)CPUInfo_dealloc,			/*tp_dealloc*/
+    0,						/*tp_print*/
+    0,						/*tp_getattr*/
+    0,						/*tp_setattr*/
+    0,						/*tp_compare*/
+    0,						/*tp_repr*/
+    0,						/*tp_as_number*/
+    0,						/*tp_as_sequence*/
+    0,						/*tp_as_mapping*/
+    0,						/*tp_hash*/
+    0,						/*tp_call*/
+    0,						/*tp_str*/
+    0,						/*tp_getattro*/
+    0,						/*tp_setattro*/
+    0,						/*tp_as_buffer*/
+    Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,		/*tp_flags*/
+    CPUInfo_init__doc__,         			/*tp_doc*/
+    0,						/*tp_traverse*/
+    0,						/*tp_clear*/
+    0,						/*tp_richcompare*/
+    0,						/*tp_weaklistoffset*/
+    0,						/*tp_iter*/
+    0,						/*tp_iternext*/
+    0,						/*tp_methods*/
+    0,						/*tp_members*/
+    CPUInfo_getset,					/*tp_getset*/
+    0,						/*tp_base*/
+    0,						/*tp_dict*/
+    0,						/*tp_descr_get*/
+    0,						/*tp_descr_set*/
+    0,						/*tp_dictoffset*/
+    (initproc)CPUInfo_init,				/*tp_init*/
+    PyType_GenericAlloc,				/*tp_alloc*/
+    CPUInfoObject_new,				/*tp_new*/
+    0,						/*tp_free*/
+    0,						/*tp_is_gc*/
+    0,						/*tp_bases*/
+    0,						/*tp_mro*/
+    0,						/*tp_cache*/
+    0,						/*tp_subclasses*/
+    0,						/*tp_weaklist*/
+    0,						/*tp_del*/
+    0
+};
 
 static PyMethodDef CPUInfo_methods[] = {
     {0, 0, 0, 0}
 };
 
 PyDoc_STRVAR(CPUInfo_module_documentation,
-	"The python CPUInfo module provides a interface for the CPUInfo\n\
-	library.");
+"The python CPUInfo module provides a interface for the CPUInfo\n\
+library.");
 
 /* declare function before defining it to avoid compile warnings */
 PyMODINIT_FUNC initCPUInfo(void);

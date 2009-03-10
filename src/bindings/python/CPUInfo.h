@@ -9,7 +9,8 @@
 typedef struct
 {
     PyObject_HEAD
-    PyObject *procInc;
+    PyObject *caches;
+    PyObject *features;
     cpuinfo_t *cip;
 } CPUInfoObject;
 

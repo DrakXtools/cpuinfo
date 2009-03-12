@@ -187,7 +187,7 @@ $(archivedir)::
 
 tarball:
 	$(MAKE) -C $(SRC_PATH) do_tarball
-do_tarball: $(archivedir) $(archivedir)$(SRCARCHIVE).bz2
+do_tarball: $(archivedir) $(archivedir)$(SRCARCHIVE).xz
 
 $(archivedir)$(SRCARCHIVE): $(archivedir) $(FILES)
 	BUILDDIR=`mktemp -d /tmp/buildXXXXXXXX`						; \
@@ -203,6 +203,9 @@ $(archivedir)$(SRCARCHIVE): $(archivedir) $(FILES)
 $(archivedir)$(SRCARCHIVE).bz2: $(archivedir)$(SRCARCHIVE)
 	bzip2 -9vf $(archivedir)$(SRCARCHIVE)
 
+$(archivedir)$(SRCARCHIVE).xz: $(archivedir)$(SRCARCHIVE)
+	xz -vf $(archivedir)$(SRCARCHIVE)
+
 RPMBUILD = \
 	RPMDIR=`mktemp -d`								; \
 	mkdir -p $$RPMDIR/{SPECS,SOURCES,BUILD,RPMS,SRPMS,tmp}				; \
@@ -211,7 +214,7 @@ RPMBUILD = \
 	find $$RPMDIR/ -name *.rpm -exec mv -f {} $(archivedir) \;			; \
 	rm -rf $$RPMDIR
 
-localrpm: $(archivedir)$(SRCARCHIVE).bz2
+localrpm: $(archivedir)$(SRCARCHIVE).xz
 	$(call RPMBUILD,$<)
 
 changelog: ../common/authors.xml

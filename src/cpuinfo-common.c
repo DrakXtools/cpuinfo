@@ -401,6 +401,7 @@ static const cpuinfo_feature_string_t x86_feature_strings[] = {
   DEFINE_(X86_MMX_EXT,	"mmxext",		"MMX+ Technology (AMD or Cyrix)"					),
   DEFINE_(X86_3DNOW,	"3dnow",	"3DNow! Technology"									),
   DEFINE_(X86_3DNOW_EXT, "3dnowext",	"Enhanced 3DNow! Technology"						),
+  DEFINE_(X86_3DNOW_PREFETCH,	"3dnowprefetch",	"3DNow! prefetch"),
   DEFINE_(X86_SSE,		"sse",		"SSE Technology"									),
   DEFINE_(X86_SSE2,		"sse2",		"SSE2 Technology"									),
   DEFINE_(X86_SSE3,		"sse3",		"SSE3 Technology (Prescott New Instructions)"		),

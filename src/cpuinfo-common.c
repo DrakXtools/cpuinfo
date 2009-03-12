@@ -30,7 +30,7 @@
 
 
 cpuinfo_feature_t cpuinfo_feature_common = CPUINFO_FEATURE_COMMON,
-		  cpuinfo_feature_max = CPUINFO_FEATURE_COMMON_MAX;
+		  cpuinfo_feature_common_max = CPUINFO_FEATURE_COMMON_MAX;
 
 // Returns a new cpuinfo descriptor
 struct cpuinfo *cpuinfo_new(void)

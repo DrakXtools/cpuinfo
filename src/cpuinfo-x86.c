@@ -1233,6 +1233,8 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 
 	    if (ecx & (1 << 0))
 		feature_set_bit(SSE3);
+	    if (ecx & (1 << 1))
+		feature_set_bit(PCLMULQDQ);
 	    if (ecx & (1 << 2))
 		feature_set_bit(DTES64);
 	    if (ecx & (1 << 3))
@@ -1251,6 +1253,8 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 		feature_set_bit(SSSE3);
 	    if (ecx & (1 << 10))
 		feature_set_bit(CNXT_ID);
+	    if (ecx & (1 << 12))
+		feature_set_bit(FMA);
 	    if (ecx & (1 << 13))
 		feature_set_bit(CX16);
 	    if (ecx & (1 << 14))
@@ -1269,10 +1273,14 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 		feature_set_bit(X2APIC);
 	    if (ecx & (1 << 22))
 		feature_set_bit(MOVBE);
+	    if (ecx & (1 << 25))
+		feature_set_bit(AES);
 	    if (ecx & (1 << 26))
 		feature_set_bit(XSAVE);
 	    if (ecx & (1 << 27))
 		feature_set_bit(OSXSAVE);
+	    if (ecx & (1 << 28))
+		feature_set_bit(AVX);
 
 	    cpuid(0x80000000, &eax, NULL, NULL, NULL);
 	    if ((eax & 0xffff0000) == 0x80000000 && eax >= 0x80000001) {

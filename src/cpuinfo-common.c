@@ -427,14 +427,18 @@ static const cpuinfo_feature_string_t x86_feature_strings[] = {
   DEFINE_(X86_DS_CPL,		"ds_cpl",	"CPL Qualified Debug Store"),
   DEFINE_(X86_SMX,		"smx",		"Safer Mode Extensions"),
   DEFINE_(X86_CNXT_ID,		"cnxt_id",	"L1 Context ID"),
-  DEFINE_(X86_CX16,		"cx16",	"CMPCXHG16B Instruction"),
-  DEFINE_(X86_XTPR,		"xtpr",	"xTPR Update Conrol"),
+  DEFINE_(X86_CX16,		"cx16",		"Supports CMPCXHG16B Instruction"),
+  DEFINE_(X86_XTPR,		"xtpr",		"xTPR Update Conrol"),
   DEFINE_(X86_PDCM,		"pdcm",		"Perfmon and Debug Capability"),
   DEFINE_(X86_DCA,		"dca",		"Supports prefetching from memory mapped device"),
   DEFINE_(X86_X2APIC,		"x2apic",	"Supports x2APIC"),
-  DEFINE_(X86_MOVBE,		"movbe",	"MOVBE instruction"),
+  DEFINE_(X86_MOVBE,		"movbe",	"Supports MOVBE instruction"),
   DEFINE_(X86_XSAVE,		"xsave",	"Supports XSAVE/XRSTOR instructions"),
-  DEFINE_(X86_OSXSAVE,		"osxsave",	"Supports OSXSAVE/OSXRSTOR instructions"),
+  DEFINE_(X86_PCLMULQDQ,	"pclmulqdq",	"Supports PCLMULQDQ instruction"),
+  DEFINE_(X86_FMA,		"fma",		"Supports FMA extensions using YMM state."),
+  DEFINE_(X86_AES,		"aes",		"Supports AES instruction"),
+  DEFINE_(X86_AVX,		"avx",		"Supports Advanced Vector Extensions"),
+
 };
 
 static const int n_x86_feature_strings = sizeof(x86_feature_strings) / sizeof(x86_feature_strings[0]);

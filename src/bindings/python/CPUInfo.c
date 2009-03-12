@@ -118,7 +118,7 @@ CPUInfo_getFeatures(CPUInfoObject *self)
 }
 
 static PyGetSetDef CPUInfo_getset[] = {
-    {"caches|", (getter)CPUInfo_getCacheTypes, NULL,
+    {"caches", (getter)CPUInfo_getCacheTypes, NULL,
 	"Processor caches", NULL},
     {"cores", (getter)CPUInfo_getCores, NULL,
 	"Processor caches", NULL},

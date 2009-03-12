@@ -1170,7 +1170,7 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 	if(cpuinfo_has_cpuid()) {
 	    feature_set_bit(CPUID);
     
-	    uint32_t eax, ecx, edx;
+	    uint32_t eax = 0, ecx = 0, edx = 0;
 	    cpuid(1, NULL, NULL, &ecx, &edx);
 	    if (edx & (1 << 0))
 		feature_set_bit(FPU);

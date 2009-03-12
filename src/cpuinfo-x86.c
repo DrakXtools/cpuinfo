@@ -1228,32 +1228,25 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 		feature_set_bit(HTT);	
 	    if (edx & (1 << 31))
 		feature_set_bit(PBE);	
+
 	    if (ecx & (1 << 0))
 		feature_set_bit(SSE3);
-	    if (ecx & (1 << 9))
-		feature_set_bit(SSSE3);
-	    if (ecx & (1 << 19))
-		feature_set_bit(SSE4_1);
-	    if (ecx & (1 << 20))
-		feature_set_bit(SSE4_2);
-	    if (ecx & (1 << 23))
-		feature_set_bit(POPCNT);
-	    if (ecx & (1 << 5))
-		feature_set_bit(VMX);
-	    if (edx & (1 << 29))
-		feature_set_bit(TM);
-	    if (ecx & (1 << 8))
-		feature_set_bit(TM2);
-	    if (ecx & (1 << 7))
-		feature_set_bit(EIST);
 	    if (ecx & (1 << 2))
 		feature_set_bit(DTES64);
 	    if (ecx & (1 << 3))
 		feature_set_bit(MONITOR);
 	    if (ecx & (1 << 4))
 		feature_set_bit(DS_CPL);
+	    if (ecx & (1 << 5))
+		feature_set_bit(VMX);
 	    if (ecx & (1 << 6))
 		feature_set_bit(SMX);
+	    if (ecx & (1 << 7))
+		feature_set_bit(EIST);
+	    if (ecx & (1 << 8))
+		feature_set_bit(TM2);
+	    if (ecx & (1 << 9))
+		feature_set_bit(SSSE3);
 	    if (ecx & (1 << 10))
 		feature_set_bit(CNXT_ID);
 	    if (ecx & (1 << 13))
@@ -1264,6 +1257,12 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 		feature_set_bit(PDCM);
 	    if (ecx & (1 << 18))
 		feature_set_bit(DCA);
+	    if (ecx & (1 << 19))
+		feature_set_bit(SSE4_1);
+	    if (ecx & (1 << 20))
+		feature_set_bit(SSE4_2);
+	    if (ecx & (1 << 23))
+		feature_set_bit(POPCNT);
 	    if (ecx & (1 << 21))
 		feature_set_bit(X2APIC);
 	    if (ecx & (1 << 22))
@@ -1272,35 +1271,37 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 		feature_set_bit(XSAVE);
 	    if (ecx & (1 << 27))
 		feature_set_bit(OSXSAVE);
+	    if (edx & (1 << 29))
+		feature_set_bit(TM);
 
 	    cpuid(0x80000000, &eax, NULL, NULL, NULL);
 	    if ((eax & 0xffff0000) == 0x80000000 && eax >= 0x80000001) {
 		cpuid(0x80000001, NULL, NULL, &ecx, &edx);
-		if (ecx & (1 << 11))
-		    feature_set_bit(SSE5);
-		if (ecx & (1 << 7))
-		    feature_set_bit(MSSE);
-		if (ecx & (1 << 6))
-		    feature_set_bit(SSE4A);
-		if (ecx & (1 << 5))
-		    feature_set_bit(ABM);
-		if (ecx & (1 << 2))
-		    feature_set_bit(SVM);
 		if (ecx & (1 << 0))
 		    feature_set_bit(LAHF64);
+		if (ecx & (1 << 2))
+		    feature_set_bit(SVM);
+		if (ecx & (1 << 5))
+		    feature_set_bit(ABM);
+		if (ecx & (1 << 6))
+		    feature_set_bit(SSE4A);
+		if (ecx & (1 << 7))
+		    feature_set_bit(MSSE);
+		if (ecx & (1 << 11))
+		    feature_set_bit(SSE5);
 		if (edx & (1 << 20))
 		    feature_set_bit(NX);
-		if (edx & (1 << 29))
-		    feature_set_bit(LM);
-		if (edx & (1 << 31))
-		    feature_set_bit(3DNOW);
-		if (edx & (1 << 30))
-		    feature_set_bit(3DNOW_PLUS);
 		// XXX not sure they are the same MMX extensions...
 		if (cpuinfo_get_vendor(cip) == CPUINFO_VENDOR_AMD && (edx & (1 << 22)))
 		    feature_set_bit(MMX_PLUS);
 		if (cpuinfo_get_vendor(cip) == CPUINFO_VENDOR_CYRIX && (edx & (1 << 24)))
 		    feature_set_bit(MMX_PLUS);
+		if (edx & (1 << 29))
+		    feature_set_bit(LM);
+		if (edx & (1 << 30))
+		    feature_set_bit(3DNOW_PLUS);
+		if (edx & (1 << 31))
+		    feature_set_bit(3DNOW);
 	    }
 	}
 

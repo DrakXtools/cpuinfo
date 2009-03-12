@@ -393,7 +393,8 @@ static const cpuinfo_feature_string_t x86_feature_strings[] = {
   DEFINE_(X86_CLFLUSH,		"clflush",	"CLFLUSH Instruction"),
   DEFINE_(X86_DS,		"ds",		"Debug Store"),
   DEFINE_(X86_ACPI,		"acpi",		"Thermal Monitor and Software Controlled Clock Facilities"),
-  DEFINE_(X86_FXSR,		"fxsr",		"FXSAVE and FXSTOR Instructions"),
+  DEFINE_(X86_FXSR,		"fxsr",		"Supports FXSAVE/FXSTOR instructions"),
+  DEFINE_(X86_FFXSR,		"ffxsr",	"Supports FXSAVE/FXSTOR instruction optimizations"),
   DEFINE_(X86_SS,		"ss",		"Self Snoop"),
   DEFINE_(X86_HTT,		"htt",		"Hyper-Threading Technology"),
   DEFINE_(X86_PBE,		"pbe",		"Pending Break Enable"),
@@ -438,6 +439,17 @@ static const cpuinfo_feature_string_t x86_feature_strings[] = {
   DEFINE_(X86_FMA,		"fma",		"Supports FMA extensions using YMM state."),
   DEFINE_(X86_AES,		"aes",		"Supports AES instruction"),
   DEFINE_(X86_AVX,		"avx",		"Supports Advanced Vector Extensions"),
+  DEFINE_(X86_CMP_LEGACY,	"cmp_legacy",	"Core multi-processing legacy mode"),
+  DEFINE_(X86_EXTAPIC,		"extapic",	"Supports Advanced Vector Extensions"),
+  DEFINE_(X86_CR8_LEGACY,	"cr8_legacy",	"LOCK MOV CR0 means MOV CR8"),
+  DEFINE_(X86_OSVW,		"osvw",		"OS visible workaround"),
+  DEFINE_(X86_IBS,		"ibs",		"Instruction based sampling"),
+  DEFINE_(X86_SKINIT,		"skinit",	"Supports SKINIT/STGI instructions"),
+  DEFINE_(X86_WDT,		"wdt",		"Watchdog timer support"),
+  DEFINE_(X86_PAGE1GB,		"page1gb",	"1-GB large page support"),
+  DEFINE_(X86_RDTSCP,		"rdtscp",	"Supports RDTSCP instruction"),
+  
+
 
 };
 

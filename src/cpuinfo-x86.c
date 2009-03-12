@@ -1287,18 +1287,33 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 		cpuid(0x80000001, NULL, NULL, &ecx, &edx);
 		if (ecx & (1 << 0))
 		    feature_set_bit(LAHF64);
+		if (ecx & (1 << 1))
+		    feature_set_bit(CMP_LEGACY);
 		if (ecx & (1 << 2))
 		    feature_set_bit(SVM);
+		if (ecx & (1 << 3))
+		    feature_set_bit(EXTAPIC);
+		if (ecx & (1 << 4))
+		    feature_set_bit(CR8_LEGACY);
 		if (ecx & (1 << 5))
 		    feature_set_bit(ABM);
 		if (ecx & (1 << 6))
 		    feature_set_bit(SSE4A);
 		if (ecx & (1 << 7))
-		    feature_set_bit(MSSE);
+		    feature_set_bit(MISALIGNSSE);
 		if (ecx & (1 << 8))
 		    feature_set_bit(3DNOW_PREFETCH);
+		if (ecx & (1 << 9))
+		    feature_set_bit(OSVW);
+		if (ecx & (1 << 10))
+		    feature_set_bit(IBS);
 		if (ecx & (1 << 11))
 		    feature_set_bit(SSE5);
+		if (ecx & (1 << 12))
+		    feature_set_bit(SKINIT);
+		if (ecx & (1 << 13))
+		    feature_set_bit(WDT);
+
 
 		if (edx & (1 << 20))
 		    feature_set_bit(NX);
@@ -1307,6 +1322,12 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 		    feature_set_bit(MMX_EXT);
 		if (cpuinfo_get_vendor(cip) == CPUINFO_VENDOR_CYRIX && (edx & (1 << 24)))
 		    feature_set_bit(MMX_EXT);
+		if (edx & (1 << 25))
+		    feature_set_bit(FFXSR);
+		if (edx & (1 << 26))
+		    feature_set_bit(PAGE1GB);		
+		if (edx & (1 << 27))
+		    feature_set_bit(RDTSCP);
 		if (edx & (1 << 29))
 		    feature_set_bit(LM);
 		if (edx & (1 << 30))

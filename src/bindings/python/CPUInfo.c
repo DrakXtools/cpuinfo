@@ -15,7 +15,7 @@ Initializes a CPUInfo object holding the cpuinfo descriptor for your CPU.");
 static int
 CPUInfo_init(CPUInfoObject *self)
 {
-    int i, j;
+    int i;
     self->cip = cpuinfo_new();
 
     if(self->cip == NULL){
@@ -46,41 +46,25 @@ CPUInfo_init(CPUInfoObject *self)
     PyDict_SetItemString(self->features, "general", genFeats);
     PyDict_SetItemString(self->features, "architecture", archFeats);
 
-    static const struct {
-	int base;
-	int max;
-    } features_bits[] = {
-	{ CPUINFO_FEATURE_COMMON + 1, CPUINFO_FEATURE_COMMON_MAX },
-	{ CPUINFO_FEATURE_X86, CPUINFO_FEATURE_X86_MAX },
-	{ CPUINFO_FEATURE_IA64, CPUINFO_FEATURE_IA64_MAX },
-	{ CPUINFO_FEATURE_PPC, CPUINFO_FEATURE_PPC_MAX },
-	{ CPUINFO_FEATURE_MIPS, CPUINFO_FEATURE_MIPS_MAX },
-	{ -1, 0 }
-    };
+    cpuinfo_feature_t feature;
 
-    for (i = 0; features_bits[i].base != -1; i++) {
-	int base = features_bits[i].base;
-	int count = features_bits[i].max - base;
-	for (j = 0; j < count; j++) {
-	    int feature = base + j;
-	    if (cpuinfo_has_feature(self->cip, feature)) {
-		const char *name = cpuinfo_string_of_feature(feature);
-		const char *detail = cpuinfo_string_of_feature_detail(feature);
-		if (name && detail)
-		{
-		    if(feature < CPUINFO_FEATURE_COMMON_MAX)
-			PyDict_SetItemString(genFeats, name, PyString_FromString(detail));
-		    else
-			PyDict_SetItemString(archFeats, name, PyString_FromString(detail));
-		}
-		else
-		    fprintf(stdout, "  %-10s No description for feature %08x\n", "<error>", feature);
-	    }
+    for (feature = cpuinfo_feature_common; feature != cpuinfo_feature_architecture_max; feature++) {
+    	if(feature == cpuinfo_feature_common_max)
+	    feature = cpuinfo_feature_architecture;
+	const char *name = cpuinfo_string_of_feature(feature);
+	const char *detail = cpuinfo_string_of_feature_detail(feature);
+	if (name && detail)
+	{
+    	    if(feature < cpuinfo_feature_common_max)
+		PyDict_SetItemString(genFeats, name, PyString_FromString(detail));
+	    else
+		PyDict_SetItemString(archFeats, name, PyString_FromString(detail));
 	}
+	else
+	    fprintf(stdout, "  %-10s No description for feature %08x\n", "<error>", feature);
     }
 
     return 0;
-
 }
 
 static PyObject *

@@ -1226,6 +1226,8 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 		feature_set_bit(SS);
 	    if (edx & (1 << 28))
 		feature_set_bit(HTT);	
+	    if (edx & (1 << 29))
+		feature_set_bit(TM);
 	    if (edx & (1 << 31))
 		feature_set_bit(PBE);	
 
@@ -1271,8 +1273,6 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 		feature_set_bit(XSAVE);
 	    if (ecx & (1 << 27))
 		feature_set_bit(OSXSAVE);
-	    if (edx & (1 << 29))
-		feature_set_bit(TM);
 
 	    cpuid(0x80000000, &eax, NULL, NULL, NULL);
 	    if ((eax & 0xffff0000) == 0x80000000 && eax >= 0x80000001) {
@@ -1291,6 +1291,7 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 		    feature_set_bit(3DNOW_PREFETCH);
 		if (ecx & (1 << 11))
 		    feature_set_bit(SSE5);
+
 		if (edx & (1 << 20))
 		    feature_set_bit(NX);
 		// XXX not sure they are the same MMX extensions...

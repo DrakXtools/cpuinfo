@@ -1207,9 +1207,9 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 	    if (edx & (1 << 17))
 		feature_set_bit(PSE_36);
 	    if (edx & (1 << 18))
-		feature_set_bit(CLFSH);
+		feature_set_bit(CLFLUSH);
 	    if (edx & (1 << 19))
-		feature_set_bit(CLFSH);
+		feature_set_bit(CLFLUSH);
 	    if (edx & (1 << 21))
 		feature_set_bit(DS);
 	    if (edx & (1 << 22))
@@ -1250,9 +1250,9 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 	    if (ecx & (1 << 10))
 		feature_set_bit(CNXT_ID);
 	    if (ecx & (1 << 13))
-		feature_set_bit(CMPXCHG16B);
+		feature_set_bit(CX16);
 	    if (ecx & (1 << 14))
-		feature_set_bit(XTPRUC);
+		feature_set_bit(XTPR);
 	    if (ecx & (1 << 15))
 		feature_set_bit(PDCM);
 	    if (ecx & (1 << 18))
@@ -1293,13 +1293,13 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 		    feature_set_bit(NX);
 		// XXX not sure they are the same MMX extensions...
 		if (cpuinfo_get_vendor(cip) == CPUINFO_VENDOR_AMD && (edx & (1 << 22)))
-		    feature_set_bit(MMX_PLUS);
+		    feature_set_bit(MMX_EXT);
 		if (cpuinfo_get_vendor(cip) == CPUINFO_VENDOR_CYRIX && (edx & (1 << 24)))
-		    feature_set_bit(MMX_PLUS);
+		    feature_set_bit(MMX_EXT);
 		if (edx & (1 << 29))
 		    feature_set_bit(LM);
 		if (edx & (1 << 30))
-		    feature_set_bit(3DNOW_PLUS);
+		    feature_set_bit(3DNOW_EXT);
 		if (edx & (1 << 31))
 		    feature_set_bit(3DNOW);
 	    }
@@ -1312,9 +1312,9 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 	  cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_64BIT);
 
 	if (feature_get_bit(MMX) ||
-		feature_get_bit(MMX_PLUS) ||
+		feature_get_bit(MMX_EXT) ||
 		feature_get_bit(3DNOW) ||
-		feature_get_bit(3DNOW_PLUS) ||
+		feature_get_bit(3DNOW_EXT) ||
 		feature_get_bit(SSE) ||
 		feature_get_bit(SSE2) ||
 		feature_get_bit(SSE3) ||

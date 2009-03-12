@@ -16,6 +16,8 @@ static int
 CPUInfo_init(CPUInfoObject *self)
 {
     int i;
+    cpuinfo_feature_t feature;
+
     self->cip = cpuinfo_new();
 
     if(self->cip == NULL){
@@ -45,8 +47,6 @@ CPUInfo_init(CPUInfoObject *self)
     PyObject *archFeats = PyDict_New();
     PyDict_SetItemString(self->features, "general", genFeats);
     PyDict_SetItemString(self->features, "architecture", archFeats);
-
-    cpuinfo_feature_t feature;
 
     for (feature = cpuinfo_feature_common; feature != cpuinfo_feature_architecture_max; feature++) {
     	if(feature == cpuinfo_feature_common_max)

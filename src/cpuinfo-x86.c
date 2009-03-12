@@ -1287,6 +1287,8 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 		    feature_set_bit(SSE4A);
 		if (ecx & (1 << 7))
 		    feature_set_bit(MSSE);
+		if (ecx & (1 << 8))
+		    feature_set_bit(3DNOW_PREFETCH);
 		if (ecx & (1 << 11))
 		    feature_set_bit(SSE5);
 		if (edx & (1 << 20))

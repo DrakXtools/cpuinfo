@@ -390,7 +390,7 @@ static const cpuinfo_feature_string_t x86_feature_strings[] = {
   DEFINE_(X86_PAT,		"pat",		"Page Attribute Table"),
   DEFINE_(X86_PSE_36,		"pse36",	"36-Bit Page Size Extension"),
   DEFINE_(X86_PSN,		"psn",		"Processor Serial Number"),
-  DEFINE_(X86_CLFSH,		"clfsh",	"CLFLUSH Instruction"),
+  DEFINE_(X86_CLFSH,		"clflush",	"CLFLUSH Instruction"),
   DEFINE_(X86_DS,		"ds",		"Debug Store"),
   DEFINE_(X86_ACPI,		"acpi",		"Thermal Monitor and Software Controlled Clock Facilities"),
   DEFINE_(X86_FXSR,		"fxsr",		"FXSAVE and FXSTOR Instructions"),

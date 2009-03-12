@@ -30,6 +30,9 @@
 #define DEBUG 1
 #include "debug.h"
 
+cpuinfo_feature_t cpuinfo_feature_architecture = CPUINFO_FEATURE_IA64,
+		  cpuinfo_feature_architecture_max = CPUINFO_FEATURE_IA64_MAX;
+
 // Extract CPUID registers
 static uint64_t cpuid(int reg)
 {

@@ -229,6 +229,11 @@ typedef enum {
   CPUINFO_FEATURE_MIPS_MAX
 } cpuinfo_feature_t;
 
+extern cpuinfo_feature_t cpuinfo_feature_common,
+			 cpuinfo_feature_common_max,
+			 cpuinfo_feature_architecture,
+			 cpuinfo_feature_architecture_max;
+
 // Returns 1 if CPU supports the specified feature
 extern int cpuinfo_has_feature(cpuinfo_t *cip, int feature);
 

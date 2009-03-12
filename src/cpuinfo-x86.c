@@ -28,6 +28,9 @@
 #define DEBUG 1
 #include "debug.h"
 
+cpuinfo_feature_t cpuinfo_feature_architecture = CPUINFO_FEATURE_X86,
+		  cpuinfo_feature_architecture_max = CPUINFO_FEATURE_X86_MAX;
+
 static int cpuinfo_has_ac()
 {
   unsigned long a, c;

@@ -36,6 +36,9 @@
 #define DEBUG 1
 #include "debug.h"
 
+cpuinfo_feature_t cpuinfo_feature_architecture = CPUINFO_FEATURE_PPC,
+		  cpuinfo_feature_architecture_max = CPUINFO_FEATURE_PPC_MAX;
+
 // Extract information from Open Firmware
 typedef char of_string_t[256];
 

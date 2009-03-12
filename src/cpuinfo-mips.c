@@ -30,6 +30,9 @@
 #define DEBUG 1
 #include "debug.h"
 
+cpuinfo_feature_t cpuinfo_feature_architecture = CPUINFO_FEATURE_MIPS,
+		  cpuinfo_feature_architecture_max = CPUINFO_FEATURE_MIPS_MAX;
+
 // CPU caches specifications
 #define DEFINE_CACHE_DESCRIPTOR(NAME, TYPE, LEVEL, SIZE) \
 static const cpuinfo_cache_descriptor_t NAME = { CPUINFO_CACHE_TYPE_##TYPE, LEVEL, SIZE }

@@ -1,0 +1,1 @@
+include MANIFEST.in CPUInfo.c CPUInfo.h setup.cfg setup.py

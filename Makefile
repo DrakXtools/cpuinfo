@@ -256,5 +256,5 @@ $(perl_bindings_LIB): $(libcpuinfo_module) $(perl_bindings_FILES)
 	$(PERL) Makefile.PL \
 		--cflags="$(CFLAGS)" \
 		--cpuinfo-incdir="$${cpuinfo_incdir}" \
-		--cpuinfo-libdir="$${cpuinfo_libdir}" && \
+		--cpuinfo-libdir="$${cpuinfo_libdir}" $(PERL_INSTALLDIRS) && \
 	$(MAKE)

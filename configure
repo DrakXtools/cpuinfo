@@ -110,8 +110,12 @@ case "$opt" in
 --disable-shared)
     build_shared="no"
     ;;
---enable-perl)
+--enable-perl*)
     build_perl="yes"
+    build_perl_arg="`echo $opt | cut -d '=' -s -f 2`"
+    if [ -n $build_perl_arg ]; then
+	PERL_INSTALLDIRS="INSTALLDIRS=$build_perl_arg"
+    fi
     ;;
 --disable-perl)
     build_perl="no"
@@ -462,6 +466,7 @@ fi
 echo "build_static=$build_static" >> $config_mak
 echo "build_shared=$build_shared" >> $config_mak
 echo "build_perl=$build_perl" >> $config_mak
+echo "PERL_INSTALLDIRS=$PERL_INSTALLDIRS" >> $config_mak
 echo "install_sdk=$install_sdk" >> $config_mak
 
 VERSION=`sed < $source_path/$PACKAGE.spec -n '/^\%define version[	]*/s///p'`

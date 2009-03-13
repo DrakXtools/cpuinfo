@@ -31,7 +31,7 @@ version_define = [('VERSION', '"%s"' % version)]
 
 c_files = ['CPUInfo.c']
 
-compile_args = ['-std=gnu99']
+compile_args = ['-std=gnu99', '-fno-strict-aliasing']
 warnflags = ['-Wall', '-Wextra', '-pedantic']
 compile_args.extend(warnflags)
 link_args = ['-lcpuinfo']

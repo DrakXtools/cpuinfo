@@ -107,11 +107,11 @@ cpuinfo_OBJECTS += $(libcpuinfo_a_OBJECTS)
 endif
 endif
 
-perl_bindings_DIR	= $(SRC_PATH)/src/bindings/perl
+perl_bindings_DIR	= src/bindings/perl
 perl_bindings_LIB	= $(perl_bindings_DIR)/blib/arch/auto/Cpuinfo/Cpuinfo.so
 perl_bindings_FILES	= $(patsubst %,$(perl_bindings_DIR)/%,$(shell cat $(perl_bindings_DIR)/MANIFEST))
 
-python_bindings_DIR	= $(SRC_PATH)/src/bindings/python
+python_bindings_DIR	= src/bindings/python
 python_bindings_LIB	= $(python_bindings_DIR)/build/lib/CPUInfo.so
 python_bindings_FILES	= $(patsubst %,$(python_bindings_DIR)/%,$(shell cat $(python_bindings_DIR)/MANIFEST.in|sed -e 's/include //'))
 
@@ -278,7 +278,7 @@ python.clean:
 		rm -rf build
 python.install: $(python_bindings_LIB)
 	@cd $(python_bindings_DIR) && \
-		python setup.py install
+		python setup.py install --root=$(DESTDIR)
 $(python_bindings_LIB): $(libcpuinfo_module) $(python_bindings_FILES)
 $(python_bindings_LIB): $(libcpuinfo_module) $(python_bindings_FILES)
 	@cd $(python_bindings_DIR) && \

@@ -111,6 +111,10 @@ perl_bindings_DIR	= $(SRC_PATH)/src/bindings/perl
 perl_bindings_LIB	= $(perl_bindings_DIR)/blib/arch/auto/Cpuinfo/Cpuinfo.so
 perl_bindings_FILES	= $(patsubst %,$(perl_bindings_DIR)/%,$(shell cat $(perl_bindings_DIR)/MANIFEST))
 
+python_bindings_DIR	= $(SRC_PATH)/src/bindings/python
+python_bindings_LIB	= $(python_bindings_DIR)/build/lib/CPUInfo.so
+python_bindings_FILES	= $(patsubst %,$(python_bindings_DIR)/%,$(shell cat $(python_bindings_DIR)/MANIFEST.in|sed -e 's/include //'))
+
 TARGETS		= $(cpuinfo_PROGRAM)
 ifeq ($(build_static),yes)
 TARGETS		+= $(libcpuinfo_a)
@@ -121,6 +125,9 @@ endif
 ifeq ($(build_perl),yes)
 TARGETS		+= perl
 endif
+ifeq ($(build_python),yes)
+TARGETS		+= python
+endif
 
 archivedir	= files/
 SRCARCHIVE	= $(PACKAGE)-$(VERSION)$(VERSION_SUFFIX).tar
@@ -129,10 +136,11 @@ FILES		+= README NEWS TODO COPYING COPYING.LIB ChangeLog
 FILES		+= $(wildcard src/*.c)
 FILES		+= $(wildcard src/*.h)
 FILES		+= $(perl_bindings_FILES)
+FILES		+= $(python_bindings_FILES)
 
 all: $(TARGETS)
 
-clean: perl.clean
+clean: perl.clean python.clean
 	rm -f $(TARGETS) *.o *.os
 	rm -f $(libcpuinfo_a) $(libcpuinfo_a_OBJECTS)
 	rm -f $(libcpuinfo_so) $(libcpuinfo_so_SONAME) $(libcpuinfo_so_LTLIBRARY) $(libcpuinfo_so_OBJECTS)
@@ -140,7 +148,7 @@ clean: perl.clean
 $(cpuinfo_PROGRAM): $(cpuinfo_OBJECTS) $(cpuinfo_DEPS)
 	$(CC_FOR_SHARED) -o $@ $(cpuinfo_OBJECTS) $(cpuinfo_LDFLAGS) $(LDFLAGS)
 
-install: install.dirs install.bins install.libs install.perl
+install: install.dirs install.bins install.libs install.perl install.python
 install.dirs:
 	mkdir -p $(DESTDIR)$(bindir)
 ifeq (yes,$(findstring yes,$(build_static) $(build_shared)))
@@ -180,6 +188,11 @@ ifeq ($(build_perl),yes)
 install.perl: perl.install
 else
 install.perl:
+endif
+ifeq ($(build_python),yes)
+install.python: python.install
+else
+install.python:
 endif
 
 $(archivedir)::
@@ -258,3 +271,15 @@ $(perl_bindings_LIB): $(libcpuinfo_module) $(perl_bindings_FILES)
 		--cpuinfo-incdir="$${cpuinfo_incdir}" \
 		--cpuinfo-libdir="$${cpuinfo_libdir}" $(PERL_INSTALLDIRS) && \
 	$(MAKE)
+python: $(python_bindings_LIB)
+python.clean:
+	@cd $(python_bindings_DIR) && \
+		python setup.py clean && \
+		rm -rf build
+python.install: $(python_bindings_LIB)
+	@cd $(python_bindings_DIR) && \
+		python setup.py install
+$(python_bindings_LIB): $(libcpuinfo_module) $(python_bindings_FILES)
+$(python_bindings_LIB): $(libcpuinfo_module) $(python_bindings_FILES)
+	@cd $(python_bindings_DIR) && \
+		python setup.py build --build-lib=build/lib

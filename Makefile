@@ -282,4 +282,6 @@ python.install: $(python_bindings_LIB)
 $(python_bindings_LIB): $(libcpuinfo_module) $(python_bindings_FILES)
 $(python_bindings_LIB): $(libcpuinfo_module) $(python_bindings_FILES)
 	@cd $(python_bindings_DIR) && \
+		CPPFLAGS="-I$(SRC_PATH)/src" \
+		LDFLAGS="-L$(SRC_PATH)" \
 		python setup.py build --build-lib=build/lib

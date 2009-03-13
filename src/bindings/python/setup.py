@@ -34,7 +34,11 @@ c_files = ['CPUInfo.c']
 compile_args = ['-std=gnu99', '-fno-strict-aliasing']
 warnflags = ['-Wall', '-Wextra', '-pedantic']
 compile_args.extend(warnflags)
+if(os.environ.has_key('CPPFLAGS')):
+    compile_args.extend(os.environ['CPPFLAGS'].split(' '))
 link_args = ['-lcpuinfo']
+if(os.environ.has_key('LDFLAGS')):
+    link_args.extend(os.environ['LDFLAGS'].split(' '))    
 
 extens=[Extension('CPUInfo', c_files, extra_compile_args=compile_args, extra_link_args=link_args, define_macros=version_define)]
 

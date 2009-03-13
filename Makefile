@@ -278,7 +278,7 @@ python.clean:
 		rm -rf build
 python.install: $(python_bindings_LIB)
 	@cd $(python_bindings_DIR) && \
-		python setup.py install --root=$(DESTDIR)
+		python setup.py build --build-lib=build/lib install --root=$(DESTDIR)
 $(python_bindings_LIB): $(libcpuinfo_module) $(python_bindings_FILES)
 $(python_bindings_LIB): $(libcpuinfo_module) $(python_bindings_FILES)
 	@cd $(python_bindings_DIR) && \

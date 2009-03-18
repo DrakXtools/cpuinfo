@@ -541,6 +541,18 @@ EOF
     rm -f $TMPC $TMPE
 done
 
+# check for sys/personality.h
+header=sys/personality.h
+cat > $TMPC << EOF
+#include <$header>
+int main(void) { return PER_LINUX_32BIT; }
+EOF
+if $cc $TMPC -o $TMPE > /dev/null 2>&1; then
+    header_def=`echo "$header" | tr '[:lower:]./-' '[:upper:]___'`
+    echo "#define HAVE_$header_def 1" >> $config_h
+fi
+rm -f $TMPC $TMPE
+
 # build tree in object directory if source path is different from current one
 if test "$source_path_used" = "yes" ; then
     case $source_path in

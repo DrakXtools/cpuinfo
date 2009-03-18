@@ -36,6 +36,10 @@
 #include <sys/types.h>
 #endif
 
+#ifdef HAVE_SYS_PERSONALITY_H
+#include <sys/personality.h>
+#endif
+
 // Private interface specification
 #ifdef HAVE_VISIBILITY_ATTRIBUTE
 #define attribute_hidden __attribute__((visibility("hidden")))

@@ -219,6 +219,11 @@ const cpuinfo_cache_t *cpuinfo_get_caches(struct cpuinfo *cip)
 // Returns 1 if CPU supports the specified feature
 int cpuinfo_has_feature(struct cpuinfo *cip, int feature)
 {
+#ifdef HAVE_SYS_PERSONALITY_H
+  if((feature == CPUINFO_FEATURE_64BIT) && (personality(0xffffffff) & PER_MASK) == PER_LINUX32)
+      return false;
+#endif
+
   return cpuinfo_arch_has_feature(cip, feature);
 }
 

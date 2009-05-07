@@ -1340,7 +1340,11 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 	if (bsf_clobbers_eflags())
 	  feature_set_bit(BSFCC);
 
-	if (feature_get_bit(LM))
+	/*
+	 * FIXME: checking size_t size is lame and will be dependent on build,
+	 * 	  is there any way to check EFER.LMA from userspace perhaps?
+	 */
+	if (feature_get_bit(LM) && sizeof(size_t) == 8)
 	  cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_64BIT);
 
 	if (feature_get_bit(MMX) ||

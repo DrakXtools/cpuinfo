@@ -22,6 +22,9 @@
 #include <unistd.h>
 #include <ctype.h>
 #include <sys/time.h>
+#if defined __linux__
+#include <sys/utsname.h>
+#endif
 #include "cpuinfo.h"
 #include "cpuinfo-private.h"
 
@@ -1164,6 +1167,9 @@ uint32_t *cpuinfo_arch_feature_table(struct cpuinfo *cip, int feature)
 int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 {
   if (!cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_X86)) {
+#if defined __linux__
+	static struct utsname un;
+#endif
 	cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_X86);
 	if(cpuinfo_has_ac())
 	    feature_set_bit(AC);
@@ -1344,7 +1350,13 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 	 * FIXME: checking size_t size is lame and will be dependent on build,
 	 * 	  is there any way to check EFER.LMA from userspace perhaps?
 	 */
-	if (feature_get_bit(LM) && sizeof(size_t) == 8)
+#if defined __linux__
+	uname(&un);
+	/* don't really know what identifier is used on other platforms.. */
+	if (feature_get_bit(LM) && !strcmp(un.machine, "x86_64"))
+#else
+	if (feature_get_bit(LM)	&& sizeof(size_t) == 8)
+#endif
 	  cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_64BIT);
 
 	if (feature_get_bit(MMX) ||

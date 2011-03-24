@@ -1213,7 +1213,7 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 	    if (edx & (1 << 17))
 		feature_set_bit(PSE_36);
 	    if (edx & (1 << 18))
-		feature_set_bit(CLFLUSH);
+		feature_set_bit(PSN);
 	    if (edx & (1 << 19))
 		feature_set_bit(CLFLUSH);
 	    if (edx & (1 << 21))

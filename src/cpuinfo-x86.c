@@ -1283,6 +1283,8 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 		feature_set_bit(MOVBE);
 	    if (ecx & (1 << 23))
 		feature_set_bit(POPCNT);
+	    if (ecx & (1 << 24))
+		feature_set_bit(TSC_DEADLINE);
 	    if (ecx & (1 << 25))
 		feature_set_bit(AES);
 	    if (ecx & (1 << 26))

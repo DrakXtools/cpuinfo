@@ -422,6 +422,7 @@ static const cpuinfo_feature_string_t x86_feature_strings[] = {
   DEFINE_(X86_LM,		"lm",		"Long Mode (64-bit capable)"						),
   DEFINE_(X86_LAHF64,	"lahf_lm",	"LAHF/SAHF Supported in 64-bit mode"				),
   DEFINE_(X86_POPCNT,	"popcnt",	"POPCNT (population count) instruction supported"	),
+  DEFINE_(X86_TSC_DEADLINE,	"tsc_deadline",	"Time Stamp Counter Deadline"),
   DEFINE_(X86_ABM,		"abm",		"Advanced Bit Manipulation instructions (LZCNT)"	),
   DEFINE_(X86_BSFCC,	"bsf_cc",	"BSF instruction clobbers condition codes"			),
   DEFINE_(X86_TM,		"tm",		"Thermal Monitor"									),

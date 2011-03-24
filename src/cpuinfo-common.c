@@ -427,7 +427,7 @@ static const cpuinfo_feature_string_t x86_feature_strings[] = {
   DEFINE_(X86_BSFCC,	"bsf_cc",	"BSF instruction clobbers condition codes"			),
   DEFINE_(X86_TM,		"tm",		"Thermal Monitor"									),
   DEFINE_(X86_TM2,		"tm2",		"Thermal Monitor 2"									),
-  DEFINE_(X86_IA64,		"ia64",		"Intel Itanium"									),
+  DEFINE_(X86_IA64,		"ia64",		"Intel 64 Instruction Set Architecture"									),
   DEFINE_(X86_EIST,		"eist",		"Enhanced Intel Speedstep Technology"				),
   DEFINE_(X86_NX,		"nx",		"No eXecute (AMD NX) / Execute Disable (Intel XD)"	),
   DEFINE_(X86_DTES64,		"dtes64",	"64-bit DS Area"),

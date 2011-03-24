@@ -299,21 +299,21 @@ const char *cpuinfo_string_of_vendor(int vendor)
 {
   const char *str = "<unknown>";
   switch (vendor) {
-  case CPUINFO_VENDOR_AMD:			str = "AMD";		break;
-  case CPUINFO_VENDOR_CENTAUR:		str = "Centaur";	break;
-  case CPUINFO_VENDOR_CYRIX:		str = "Cyrix";		break;
-  case CPUINFO_VENDOR_IBM:			str = "IBM";		break;
-  case CPUINFO_VENDOR_INTEL:		str = "Intel";		break;
-  case CPUINFO_VENDOR_MOTOROLA:		str = "Motorola";	break;
-  case CPUINFO_VENDOR_MIPS:			str = "MIPS Technologies";			break;
-  case CPUINFO_VENDOR_NEXTGEN:		str = "NextGen";	break;
-  case CPUINFO_VENDOR_NSC:			str = "National Semiconductor";		break;
-  case CPUINFO_VENDOR_PMC:			str = "PMC-Sierra";	break;
-  case CPUINFO_VENDOR_RISE:		    str = "Rise Technology";			break;
-  case CPUINFO_VENDOR_SIS:		    str = "SiS";		break;
-  case CPUINFO_VENDOR_TRANSMETA:	str = "Transmeta";	break;
-  case CPUINFO_VENDOR_UMC:		    str = "UMC";		break;
-  case CPUINFO_VENDOR_PASEMI:		str = "P.A. Semi";	break;
+  case CPUINFO_VENDOR_AMD:		str = "AMD";			break;
+  case CPUINFO_VENDOR_CENTAUR:		str = "Centaur";		break;
+  case CPUINFO_VENDOR_CYRIX:		str = "Cyrix";			break;
+  case CPUINFO_VENDOR_IBM:		str = "IBM";			break;
+  case CPUINFO_VENDOR_INTEL:		str = "Intel";			break;
+  case CPUINFO_VENDOR_MOTOROLA:		str = "Motorola";		break;
+  case CPUINFO_VENDOR_MIPS:		str = "MIPS Technologies";	break;
+  case CPUINFO_VENDOR_NEXTGEN:		str = "NextGen";		break;
+  case CPUINFO_VENDOR_NSC:		str = "National Semiconductor";	break;
+  case CPUINFO_VENDOR_PMC:		str = "PMC-Sierra";		break;
+  case CPUINFO_VENDOR_RISE:		str = "Rise Technology";	break;
+  case CPUINFO_VENDOR_SIS:		str = "SiS";			break;
+  case CPUINFO_VENDOR_TRANSMETA:	str = "Transmeta";		break;
+  case CPUINFO_VENDOR_UMC:		str = "UMC";			break;
+  case CPUINFO_VENDOR_PASEMI:		str = "P.A. Semi";		break;
   }
   return str;
 }
@@ -324,9 +324,9 @@ const char *cpuinfo_string_of_socket(int socket)
   switch (socket) {
   case CPUINFO_SOCKET_478:		str = "Socket 478";		break;
   case CPUINFO_SOCKET_479:		str = "Socket 479";		break;
-  case CPUINFO_SOCKET_604:		str = "Socket mPGA604";	break;
-  case CPUINFO_SOCKET_771:		str = "Socket LGA771";	break;
-  case CPUINFO_SOCKET_775:		str = "Socket LGA775";	break;
+  case CPUINFO_SOCKET_604:		str = "Socket mPGA604";		break;
+  case CPUINFO_SOCKET_771:		str = "Socket LGA771";		break;
+  case CPUINFO_SOCKET_775:		str = "Socket LGA775";		break;
   case CPUINFO_SOCKET_754:		str = "Socket 754";		break;
   case CPUINFO_SOCKET_939:		str = "Socket 939";		break;
   case CPUINFO_SOCKET_940:		str = "Socket 940";		break;
@@ -374,7 +374,7 @@ static const cpuinfo_feature_string_t common_feature_strings[] = {
 static const int n_common_feature_strings = sizeof(common_feature_strings) / sizeof(common_feature_strings[0]);
 
 static const cpuinfo_feature_string_t x86_feature_strings[] = {
-  DEFINE_(X86,			"[x86]",	"-- x86-specific features --"						),
+  DEFINE_(X86,			"[x86]",	"-- x86-specific features --"),
   DEFINE_(X86_AC,		"ac",		"Alignment Check"),
   DEFINE_(X86_CPUID,		"cpuid",	"CPU Identificaion"),
   DEFINE_(X86_FPU,		"fpu",		"Floating Point Unit On-Chip"),
@@ -391,7 +391,7 @@ static const cpuinfo_feature_string_t x86_feature_strings[] = {
   DEFINE_(X86_MTRR,		"mtrr",		"Memory Type Range Registers"),
   DEFINE_(X86_PGE,		"pge",		"PTE Global Bit"),
   DEFINE_(X86_MCA,		"mca",		"Machine Check Architecture"),
-  DEFINE_(X86_CMOV,		"cmov",		"Conditional Moves"									),
+  DEFINE_(X86_CMOV,		"cmov",		"Conditional Moves"),
   DEFINE_(X86_PAT,		"pat",		"Page Attribute Table"),
   DEFINE_(X86_PSE_36,		"pse36",	"36-Bit Page Size Extension"),
   DEFINE_(X86_PSN,		"psn",		"Processor Serial Number"),
@@ -403,33 +403,33 @@ static const cpuinfo_feature_string_t x86_feature_strings[] = {
   DEFINE_(X86_SS,		"ss",		"Self Snoop"),
   DEFINE_(X86_HTT,		"htt",		"Hyper-Threading Technology"),
   DEFINE_(X86_PBE,		"pbe",		"Pending Break Enable"),
-  DEFINE_(X86_MMX,		"mmx",		"MMX Technology"									),
-  DEFINE_(X86_MMX_EXT,	"mmxext",		"MMX+ Technology (AMD or Cyrix)"					),
-  DEFINE_(X86_3DNOW,	"3dnow",	"3DNow! Technology"									),
-  DEFINE_(X86_3DNOW_EXT, "3dnowext",	"Enhanced 3DNow! Technology"						),
-  DEFINE_(X86_3DNOW_PREFETCH,	"3dnowprefetch",	"3DNow! prefetch"),
-  DEFINE_(X86_SSE,		"sse",		"SSE Technology"									),
-  DEFINE_(X86_SSE2,		"sse2",		"SSE2 Technology"									),
-  DEFINE_(X86_SSE3,		"sse3",		"SSE3 Technology (Prescott New Instructions)"		),
-  DEFINE_(X86_SSSE3,	"ssse3",	"SSSE3 Technology (Merom New Instructions)"			),
-  DEFINE_(X86_SSE4_1,	"sse4.1",	"SSE4.1 Technology (Penryn New Instructions)"		),
-  DEFINE_(X86_SSE4_2,	"sse4.2",	"SSE4.2 Technology (Nehalem New Instructions)"		),
-  DEFINE_(X86_SSE4A,	"sse4a",	"SSE4A Technology (AMD Barcelona Instructions)"		),
-  DEFINE_(X86_SSE5,		"sse5",		"SSE5 Technology (AMD Bulldozer Instructions)"		),
-  DEFINE_(X86_MISALIGNSSE,	"misalignsse",		"Misaligned SSE mode"),
-  DEFINE_(X86_VMX,		"vmx",		"Intel Virtualisation Technology (VT)"				),
-  DEFINE_(X86_SVM,		"svm",		"AMD-v Technology (Pacifica)"						),
-  DEFINE_(X86_LM,		"lm",		"Long Mode (64-bit capable)"						),
-  DEFINE_(X86_LAHF64,	"lahf_lm",	"LAHF/SAHF Supported in 64-bit mode"				),
-  DEFINE_(X86_POPCNT,	"popcnt",	"POPCNT (population count) instruction supported"	),
+  DEFINE_(X86_MMX,		"mmx",		"MMX Technology"),
+  DEFINE_(X86_MMX_EXT,		"mmxext",	"MMX+ Technology (AMD or Cyrix)"),
+  DEFINE_(X86_3DNOW,		"3dnow",	"3DNow! Technology"),
+  DEFINE_(X86_3DNOW_EXT,	"3dnowext",	"Enhanced 3DNow! Technology"),
+  DEFINE_(X86_3DNOW_PREFETCH,	"3dnowprefetch","3DNow! prefetch"),
+  DEFINE_(X86_SSE,		"sse",		"SSE Technology"),
+  DEFINE_(X86_SSE2,		"sse2",		"SSE2 Technology"),
+  DEFINE_(X86_SSE3,		"sse3",		"SSE3 Technology (Prescott New Instructions)"),
+  DEFINE_(X86_SSSE3,		"ssse3",	"SSSE3 Technology (Merom New Instructions)"),
+  DEFINE_(X86_SSE4_1,		"sse4.1",	"SSE4.1 Technology (Penryn New Instructions)"),
+  DEFINE_(X86_SSE4_2,		"sse4.2",	"SSE4.2 Technology (Nehalem New Instructions)"),
+  DEFINE_(X86_SSE4A,		"sse4a",	"SSE4A Technology (AMD Barcelona Instructions)"),
+  DEFINE_(X86_SSE5,		"sse5",		"SSE5 Technology (AMD Bulldozer Instructions)"),
+  DEFINE_(X86_MISALIGNSSE,	"misalignsse",	"Misaligned SSE mode"),
+  DEFINE_(X86_VMX,		"vmx",		"Intel Virtualisation Technology (VT)"),
+  DEFINE_(X86_SVM,		"svm",		"AMD-v Technology (Pacifica)"),
+  DEFINE_(X86_LM,		"lm",		"Long Mode (64-bit capable)"),
+  DEFINE_(X86_LAHF64,		"lahf_lm",	"LAHF/SAHF Supported in 64-bit mode"),
+  DEFINE_(X86_POPCNT,		"popcnt",	"POPCNT (population count) instruction supported"),
   DEFINE_(X86_TSC_DEADLINE,	"tsc_deadline",	"Time Stamp Counter Deadline"),
-  DEFINE_(X86_ABM,		"abm",		"Advanced Bit Manipulation instructions (LZCNT)"	),
-  DEFINE_(X86_BSFCC,	"bsf_cc",	"BSF instruction clobbers condition codes"			),
-  DEFINE_(X86_TM,		"tm",		"Thermal Monitor"									),
-  DEFINE_(X86_TM2,		"tm2",		"Thermal Monitor 2"									),
-  DEFINE_(X86_IA64,		"ia64",		"Intel 64 Instruction Set Architecture"									),
-  DEFINE_(X86_EIST,		"eist",		"Enhanced Intel Speedstep Technology"				),
-  DEFINE_(X86_NX,		"nx",		"No eXecute (AMD NX) / Execute Disable (Intel XD)"	),
+  DEFINE_(X86_ABM,		"abm",		"Advanced Bit Manipulation instructions (LZCNT9"),
+  DEFINE_(X86_BSFCC,		"bsf_cc",	"BSF instruction clobbers condition codes"),
+  DEFINE_(X86_TM,		"tm",		"Thermal Monitor"),
+  DEFINE_(X86_TM2,		"tm2",		"Thermal Monitor 2"),
+  DEFINE_(X86_IA64,		"ia64",		"Intel 64 Instruction Set Architecture"),
+  DEFINE_(X86_EIST,		"eist",		"Enhanced Intel Speedstep Technology"),
+  DEFINE_(X86_NX,		"nx",		"No eXecute (AMD NX) / Execute Disable (Intel XD)"),
   DEFINE_(X86_DTES64,		"dtes64",	"64-bit DS Area"),
   DEFINE_(X86_MONITOR,		"monitor",	"MONITOR/MWAIT"),
   DEFINE_(X86_DS_CPL,		"ds_cpl",	"CPL Qualified Debug Store"),
@@ -471,29 +471,29 @@ static const cpuinfo_feature_string_t x86_feature_strings[] = {
 static const int n_x86_feature_strings = sizeof(x86_feature_strings) / sizeof(x86_feature_strings[0]);
 
 static const cpuinfo_feature_string_t ia64_feature_strings[] = {
-  DEFINE_(IA64,			"[ia64]",	"-- ia64-specific features --"						),
-  DEFINE_(IA64_LB,		"lb",		"Long branch (brl) instruction available"			),
-  DEFINE_(IA64_SD,		"sd",		"Spontaneous deferral supported"					),
-  DEFINE_(IA64_AO,		"ao",		"16-byte atomic operations"							),
+  DEFINE_(IA64,			"[ia64]",	"-- ia64-specific features --"),
+  DEFINE_(IA64_LB,		"lb",		"Long branch (brl) instruction available"),
+  DEFINE_(IA64_SD,		"sd",		"Spontaneous deferral supported"),
+  DEFINE_(IA64_AO,		"ao",		"16-byte atomic operations"),
 };
 
 static const int n_ia64_feature_strings = sizeof(ia64_feature_strings) / sizeof(ia64_feature_strings[0]);
 
 static const cpuinfo_feature_string_t ppc_feature_strings[] = {
-  DEFINE_(PPC,			"[ppc]",	"-- ppc-specific features --"										),
-  DEFINE_(PPC_VMX,		"vmx",		"Vector instruction set (AltiVec, VMX)"								),
-  DEFINE_(PPC_GPOPT,	"gpopt",	"General Purpose group optional instructions (fsqrt)"				),
-  DEFINE_(PPC_GFXOPT,	"gfxopt",	"Graphics group optional instructions (fsel, fres)"					),
-  DEFINE_(PPC_MFCRF,	"mfcrf",	"PowerPC V2.01 single field mfcr instruction"						),
-  DEFINE_(PPC_POPCNTB,	"popcntb",	"PowerPC V2.02 popcntb instruction"									),
-  DEFINE_(PPC_FPRND,	"fprnd",	"PowerPC V2.02 floating point rounding instructions (friz, frin)"	),
-  DEFINE_(PPC_MFPGPR,	"mfpgpr",	"PowerPC V2.05 move floating point to/from GPR instructions"		),
+  DEFINE_(PPC,			"[ppc]",	"-- ppc-specific features --"),
+  DEFINE_(PPC_VMX,		"vmx",		"Vector instruction set (AltiVec, VMX)"),
+  DEFINE_(PPC_GPOPT,		"gpopt",	"General Purpose group optional instructions (fsqrt)"),
+  DEFINE_(PPC_GFXOPT,		"gfxopt",	"Graphics group optional instructions (fsel, fres)"),
+  DEFINE_(PPC_MFCRF,		"mfcrf",	"PowerPC V2.01 single field mfcr instruction"),
+  DEFINE_(PPC_POPCNTB,		"popcntb",	"PowerPC V2.02 popcntb instruction"),
+  DEFINE_(PPC_FPRND,		"fprnd",	"PowerPC V2.02 floating point rounding instructions (friz, frin)"),
+  DEFINE_(PPC_MFPGPR,		"mfpgpr",	"PowerPC V2.05 move floating point to/from GPR instructions"),
 };
 
 static const int n_ppc_feature_strings = sizeof(ppc_feature_strings) / sizeof(ppc_feature_strings[0]);
 
 static const cpuinfo_feature_string_t mips_feature_strings[] = {
-  DEFINE_(MIPS,			"[mips]",	"-- mips-specific features --"						),
+  DEFINE_(MIPS,			"[mips]",	"-- mips-specific features --"),
 };
 
 static const int n_mips_feature_strings = sizeof(mips_feature_strings) / sizeof(mips_feature_strings[0]);

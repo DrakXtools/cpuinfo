@@ -1234,6 +1234,8 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 		feature_set_bit(HTT);	
 	    if (edx & (1 << 29))
 		feature_set_bit(TM);
+	    if (edx & (1 << 30))
+		feature_set_bit(IA64);
 	    if (edx & (1 << 31))
 		feature_set_bit(PBE);	
 
@@ -1267,18 +1269,20 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 		feature_set_bit(XTPR);
 	    if (ecx & (1 << 15))
 		feature_set_bit(PDCM);
+	    if (ecx & (1 << 17))
+		feature_set_bit(PCID);
 	    if (ecx & (1 << 18))
 		feature_set_bit(DCA);
 	    if (ecx & (1 << 19))
 		feature_set_bit(SSE4_1);
 	    if (ecx & (1 << 20))
 		feature_set_bit(SSE4_2);
-	    if (ecx & (1 << 23))
-		feature_set_bit(POPCNT);
 	    if (ecx & (1 << 21))
 		feature_set_bit(X2APIC);
 	    if (ecx & (1 << 22))
 		feature_set_bit(MOVBE);
+	    if (ecx & (1 << 23))
+		feature_set_bit(POPCNT);
 	    if (ecx & (1 << 25))
 		feature_set_bit(AES);
 	    if (ecx & (1 << 26))
@@ -1287,6 +1291,10 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 		feature_set_bit(OSXSAVE);
 	    if (ecx & (1 << 28))
 		feature_set_bit(AVX);
+	    if (ecx & (1 << 29))
+		feature_set_bit(F16C);
+	    if (ecx & (1 << 31))
+		feature_set_bit(HYPERVISOR);
 
 	    cpuid(0x80000000, &eax, NULL, NULL, NULL);
 	    if ((eax & 0xffff0000) == 0x80000000 && eax >= 0x80000001) {
@@ -1319,7 +1327,16 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, int feature)
 		    feature_set_bit(SKINIT);
 		if (ecx & (1 << 13))
 		    feature_set_bit(WDT);
-
+		if (ecx & (1 << 15))
+		    feature_set_bit(LWP);
+		if (ecx & (1 << 16))
+		    feature_set_bit(FMA4);
+		if (ecx & (1 << 19))
+		    feature_set_bit(NODEID_MSR);
+		if (ecx & (1 << 21))
+		    feature_set_bit(TBM);
+		if (ecx & (1 << 22))
+		    feature_set_bit(TOPOEXT);
 
 		if (edx & (1 << 20))
 		    feature_set_bit(NX);

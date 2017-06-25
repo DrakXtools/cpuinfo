@@ -311,8 +311,8 @@ EOF
 # check for C99 support
 if ! is_cxx_compiler; then
     if test "$compiler" = "gcc"; then
-	if check_cc_option -std=gnu99; then
-	    cc="$cc -std=gnu99"
+	if check_cc_option -std=gnu11; then
+	    cc="$cc -std=gnu11"
 	fi
     elif test "$compiler" = "icc"; then
 	if check_cc_option -c99; then
@@ -461,7 +461,7 @@ elif test "$target_cpu" = "ia64" ; then
     echo "CPUINFO_ARCH=ia64" >> $config_mak
     echo "#define TARGET_IA64 1" >> $config_h
     echo "#define TARGET_ARCH \"ia64\"" >> $config_h
-elif test "$target_cpu" = "i386" ; then
+elif test "$target_cpu" = "arm" ; then
     echo "ARCH=arm" >> $config_mak
     echo "CPUINFO_ARCH=arm" >> $config_mak
     echo "#define TARGET_ARM 1" >> $config_h

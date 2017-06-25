@@ -40,6 +40,7 @@ static void print_cpuinfo(struct cpuinfo *cip, FILE *out)
 
   fprintf(out, "Processor Information\n");
 
+#ifndef __arm__
   int vendor = cpuinfo_get_vendor(cip);
   fprintf(out, "  Model: %s %s", cpuinfo_string_of_vendor(vendor), cpuinfo_get_model(cip));
   int freq = cpuinfo_get_frequency(cip);
@@ -86,6 +87,7 @@ static void print_cpuinfo(struct cpuinfo *cip, FILE *out)
 	  fprintf(out, "\n");
 	}
   }
+#endif
 
   fprintf(out, "\n");
   fprintf(out, "Processor Features\n");
@@ -99,6 +101,7 @@ static void print_cpuinfo(struct cpuinfo *cip, FILE *out)
 	{ CPUINFO_FEATURE_IA64, CPUINFO_FEATURE_IA64_MAX },
 	{ CPUINFO_FEATURE_PPC, CPUINFO_FEATURE_PPC_MAX },
 	{ CPUINFO_FEATURE_MIPS, CPUINFO_FEATURE_MIPS_MAX },
+	{ CPUINFO_FEATURE_ARM, CPUINFO_FEATURE_ARM_MAX },
 	{ -1, 0 }
   };
   for (i = 0; features_bits[i].base != -1; i++) {
@@ -158,10 +161,12 @@ int main(int argc, char *argv[])
 
   print_cpuinfo(cip, out);
 
+#ifndef __arm__
   if (out_filename) { /* debug mode */
 	fprintf(out, "\n### DEBUGGING INFORMATION ###\n\n");
 	cpuinfo_dump(cip, out);
   }
+#endif
 
   if (out != stdout)
 	fclose(out);

@@ -498,6 +498,40 @@ static const cpuinfo_feature_string_t mips_feature_strings[] = {
 
 static const int n_mips_feature_strings = sizeof(mips_feature_strings) / sizeof(mips_feature_strings[0]);
 
+static const cpuinfo_feature_string_t arm_feature_strings[] = {
+  DEFINE_(ARM,			"[arm]",	"-- arm-specific features --"),
+  DEFINE_(ARM_SWP,	 	"swp",		"SWP instruction (atomic read-modify-write)"),
+  DEFINE_(ARM_HALF,	 	"half",		"Half-word loads and stores"),
+  DEFINE_(ARM_THUMB,	 	"thumb",	"Thumb (16-bit instruction set)"),
+  DEFINE_(ARM_26BIT,		"26bit",	"26-bit Model (26^2 Program Counter & Status Register"),
+  DEFINE_(ARM_FAST_MULT, 	"fast_mult",	"32×32->64-bit multiplication"),
+  DEFINE_(ARM_FPA,	 	"fpa",		"Floating point accelerator"),
+  DEFINE_(ARM_VFP,	 	"vfp",		"Vector Floating Point instruction extension"),
+  DEFINE_(ARM_EDSP,	 	"edsp",		"Digital Signal Processing enhancement"),
+  DEFINE_(ARM_JAVA,	 	"java",		"Jazelle (Java bytecode accelerator)"),
+  DEFINE_(ARM_IWMMXT,	 	"iwmmxt",	"Intel Wireless MMX Technology"),
+  DEFINE_(ARM_CRUNCH,	 	"crunch",	"MaverickCrunch coprocessor"),
+  DEFINE_(ARM_THUMBEE,	 	"thumbee",	"Thumb Execution Environment (ThumbEE)"),
+  DEFINE_(ARM_NEON,	 	"neon",		"Advanced SIMD (NEON)"),
+  DEFINE_(ARM_VFPv3,	 	"vfpv3",	"VFP version 3"),
+  DEFINE_(ARM_VFPv3D16,		"vfpv3d16",	"VFP version 3, 16 double-precision registers"),
+  DEFINE_(ARM_TLS,	 	"tls",		"Thread-local storage register"),
+  DEFINE_(ARM_VFPv4,	 	"vfpv4",	"VFP version 4, fast context switching"),
+  DEFINE_(ARM_IDIVA,	 	"idiva",	"SDIV and UDIV hardware division in ARM mode"),
+  DEFINE_(ARM_IDIVT,	 	"idivt",	"SDIV and UDIV hardware division in Thumb mode"),
+  DEFINE_(ARM_VFPD32,		"vfpd32",	"VFP version 3, 32 double-precision registers"),
+  DEFINE_(ARM_LPAE,	 	"lpae",		"Large Physical Address Extension"),
+  DEFINE_(ARM_EVTSTRM,	 	"evtstrm",	"Kernel event stream using generic architected timer"),
+  DEFINE_(ARM_IDIV,	 	"idiv",		"IDIV instructions, both ARM and Thumb mode"),
+  DEFINE_(ARM_CRYPTO_AES, 	"aes",		"AES cryptographic extensions"),
+  DEFINE_(ARM_CRYPTO_PMULL, 	"pmull",	"Binary Polynomial Multiplication Support (PMULL{2})"),
+  DEFINE_(ARM_CRYPTO_SHA1, 	"sha1",		"SHA1 cryptographic extensions"),
+  DEFINE_(ARM_CRYPTO_SHA2, 	"sha2",		"SHA2-256 cryptographic extensions"),
+  DEFINE_(ARM_CRYPTO_CRC32, 	"crc32",	"CRC32 instruction extensions"),
+};
+
+static const int n_arm_feature_strings = sizeof(arm_feature_strings) / sizeof(arm_feature_strings[0]);
+
 #undef DEFINE_
 
 static const cpuinfo_feature_string_t *cpuinfo_feature_string_ptr(int feature)
@@ -525,6 +559,10 @@ static const cpuinfo_feature_string_t *cpuinfo_feature_string_ptr(int feature)
 	fsp = mips_feature_strings;
 	fss = n_mips_feature_strings;
 	break;
+  case CPUINFO_FEATURE_ARM:
+	fsp = arm_feature_strings;
+	fss = n_arm_feature_strings;
+
   }
   if (fsp) {
 #ifdef HAVE_DESIGNATED_INITIALIZERS

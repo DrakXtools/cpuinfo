@@ -58,6 +58,9 @@ mips|IP27|IP35)
 mips64)
     target_cpu="mips64"
     ;;
+arm*)
+    target_cpu="arm"
+    ;;
 *)
     target_cpu="unknown"
     ;;
@@ -190,7 +193,7 @@ if test -z "$libdir"; then
 	;;
     esac
     case $target_cpu:$cpuinfo_64bit_output in
-    ppc64:yes | s390x:yes | sparc64:yes | x86_64:yes)
+    ppc64:yes | s390x:yes | sparc64:yes | x86_64:yes | aarch64:yes)
 	libdir="$prefix/lib64"
 	;;
     *)
@@ -458,6 +461,11 @@ elif test "$target_cpu" = "ia64" ; then
     echo "CPUINFO_ARCH=ia64" >> $config_mak
     echo "#define TARGET_IA64 1" >> $config_h
     echo "#define TARGET_ARCH \"ia64\"" >> $config_h
+elif test "$target_cpu" = "i386" ; then
+    echo "ARCH=arm" >> $config_mak
+    echo "CPUINFO_ARCH=arm" >> $config_mak
+    echo "#define TARGET_ARM 1" >> $config_h
+    echo "#define TARGET_ARCH \"arm\"" >> $config_h
 else
     echo "ERROR: Unsupported CPU"
     exit 1

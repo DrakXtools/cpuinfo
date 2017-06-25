@@ -23,6 +23,3 @@
 - New ports:
   * ARM
   * SPARC
-
-- Bindings (stable API required for DSO support):
-  * python

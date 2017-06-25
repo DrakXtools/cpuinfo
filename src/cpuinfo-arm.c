@@ -156,6 +156,13 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, unsigned long feature)
 
 	if (feature_get_bit(NEON))
 	    cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_POPCOUNT);
+
+	if (feature_get_bit(CRYPTO_AES) ||
+		feature_get_bit(CRYPTO_PMULL) ||
+		feature_get_bit(CRYPTO_SHA1) ||
+		feature_get_bit(CRYPTO_SHA2) ||
+		feature_get_bit(CRYPTO_CRC32))
+	    cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_CRYPTO);
     }
 
   return cpuinfo_feature_get_bit(cip, feature);

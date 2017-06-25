@@ -366,9 +366,10 @@ typedef struct {
 #endif
 
 static const cpuinfo_feature_string_t common_feature_strings[] = {
-  DEFINE_(64BIT,		"64bit",	"64-bit instructions"								),
-  DEFINE_(SIMD,			"simd",		"SIMD instructions"									),
-  DEFINE_(POPCOUNT,		"popcount",	"Population count instruction"						),
+  DEFINE_(64BIT,		"64bit",	"64-bit instructions"),
+  DEFINE_(SIMD,			"simd",		"SIMD instructions"),
+  DEFINE_(POPCOUNT,		"popcount",	"Population count instruction"),
+  DEFINE_(CRYPTO,		"crypto",	"Cryptographic extensions"),
 };
 
 static const int n_common_feature_strings = sizeof(common_feature_strings) / sizeof(common_feature_strings[0]);
@@ -523,6 +524,7 @@ static const cpuinfo_feature_string_t arm_feature_strings[] = {
   DEFINE_(ARM_LPAE,	 	"lpae",		"Large Physical Address Extension"),
   DEFINE_(ARM_EVTSTRM,	 	"evtstrm",	"Kernel event stream using generic architected timer"),
   DEFINE_(ARM_IDIV,	 	"idiv",		"IDIV instructions, both ARM and Thumb mode"),
+
   DEFINE_(ARM_CRYPTO_AES, 	"aes",		"AES cryptographic extensions"),
   DEFINE_(ARM_CRYPTO_PMULL, 	"pmull",	"Binary Polynomial Multiplication Support (PMULL{2})"),
   DEFINE_(ARM_CRYPTO_SHA1, 	"sha1",		"SHA1 cryptographic extensions"),

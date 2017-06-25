@@ -117,6 +117,8 @@ static void print_cpuinfo(struct cpuinfo *cip, FILE *out)
 		else
 		  fprintf(out, "  %-10s No description for feature %08x\n", "<error>", feature);
 	  }
+	  if (feature == CPUINFO_FEATURE_COMMON_MAX-1)
+	      fprintf(out, "\n");
 	}
   }
 }

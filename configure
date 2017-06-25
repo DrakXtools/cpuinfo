@@ -182,7 +182,7 @@ if test -z "$libdir"; then
 	# test if the compiler is 64bit
         echo 'int i;' > $TMPC
 	cpuinfo_64bit_output=no
-	if $cc -o $TMPO -c $TMPC; then
+	if $cc $CFLAGS -o $TMPO -c $TMPC; then
 	    case `/usr/bin/file $TMPO` in
 	    *"ELF 64"*)
 		cpuinfo_64bit_output=yes
@@ -210,7 +210,7 @@ int main(void) {
 }
 EOF
 has_designated_initializers=no
-if $cc $LDFLAGS $TMPC -o $TMPE >/dev/null 2>&1; then
+if $cc $CFLAGS $LDFLAGS $TMPC -o $TMPE >/dev/null 2>&1; then
     if $TMPE; then
 	has_designated_initializers=yes
     fi
@@ -223,7 +223,7 @@ int foo __attribute__((visibility("hidden"))) = 1;
 int bar __attribute__((visibility("protected"))) = 1;
 EOF
 has_visibility_attribute=no
-if $cc $LDFLAGS -Werror -S $TMPC -o $TMPS >/dev/null 2>&1; then
+if $cc $CFLAGS $LDFLAGS -Werror -S $TMPC -o $TMPS >/dev/null 2>&1; then
     if grep '\.hidden.*foo' $TMPS >/dev/null; then
 	if grep '\.protected.*bar' $TMPS >/dev/null; then
 	    has_visibility_attribute=yes
@@ -248,7 +248,7 @@ int main(void) {
 }
 EOF
 has_sigaction=no
-if $cc $LDFLAGS $TMPC -o $TMPE >/dev/null 2>&1; then
+if $cc $CFLAGS $LDFLAGS $TMPC -o $TMPE >/dev/null 2>&1; then
     if $TMPE; then
 	has_sigaction=yes
     fi
@@ -276,7 +276,7 @@ int main(void)
 }
 EOF
 compiler="unknown"
-if $cc $LDFLAGS $TMPC -o $TMPE >/dev/null 2>&1; then
+if $cc $CFLAGS $LDFLAGS $TMPC -o $TMPE >/dev/null 2>&1; then
     compiler=`$TMPE`
 fi
 rm -f $TMPC $TMPE
@@ -284,7 +284,7 @@ rm -f $TMPC $TMPE
 # check for compiler flag
 check_cc_option() {
     echo "int i;" > $TMPC
-    if $cc $* -c $TMPC -o $TMPO > /dev/null 2>&1; then
+    if $cc $FLAGS $* -c $TMPC -o $TMPO > /dev/null 2>&1; then
 	rm -f $TMPC $TMPO
 	return 0
     fi
@@ -300,7 +300,7 @@ is_cxx_compiler() {
 #endif
 class A { };
 EOF
-    if $cc -c $TMPC -o $TMPO > /dev/null 2>&1; then
+    if $cc $CFLAGS -c $TMPC -o $TMPO > /dev/null 2>&1; then
 	rm -f $TMPC $TMPO
 	return 0
     fi
@@ -341,7 +341,7 @@ int main(void)
     return 0;
 }
 EOF
-if ! $cc $TMPC -o $TMPE > /dev/null 2>&1; then
+if ! $cc $CFLAGS $LDFLAGS $TMPC -o $TMPE > /dev/null 2>&1; then
     if is_cxx_compiler; then
 	echo "ERROR: Unsupported C++ compiler"
     else
@@ -543,7 +543,7 @@ for header in stdint.h inttypes.h sys/types.h; do
 #include <$header>
 int main(void) { return !(sizeof(uint32_t) == 4); }
 EOF
-    if $cc $TMPC -o $TMPE > /dev/null 2>&1; then
+    if $cc $CFLAGS $LDFLAGS $TMPC -o $TMPE > /dev/null 2>&1; then
 	header_def=`echo "$header" | tr '[:lower:]./-' '[:upper:]___'`
 	echo "#define HAVE_$header_def 1" >> $config_h
     fi
@@ -556,7 +556,7 @@ cat > $TMPC << EOF
 #include <$header>
 int main(void) { return PER_LINUX_32BIT; }
 EOF
-if $cc $TMPC -o $TMPE > /dev/null 2>&1; then
+if $cc $CFLAGS $LDFLAGS $TMPC -o $TMPE > /dev/null 2>&1; then
     header_def=`echo "$header" | tr '[:lower:]./-' '[:upper:]___'`
     echo "#define HAVE_$header_def 1" >> $config_h
 fi

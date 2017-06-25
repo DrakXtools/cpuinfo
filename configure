@@ -210,7 +210,7 @@ int main(void) {
 }
 EOF
 has_designated_initializers=no
-if $cc $TMPC -o $TMPE >/dev/null 2>&1; then
+if $cc $LDFLAGS $TMPC -o $TMPE >/dev/null 2>&1; then
     if $TMPE; then
 	has_designated_initializers=yes
     fi
@@ -223,7 +223,7 @@ int foo __attribute__((visibility("hidden"))) = 1;
 int bar __attribute__((visibility("protected"))) = 1;
 EOF
 has_visibility_attribute=no
-if $cc -Werror -S $TMPC -o $TMPS >/dev/null 2>&1; then
+if $cc $LDFLAGS -Werror -S $TMPC -o $TMPS >/dev/null 2>&1; then
     if grep '\.hidden.*foo' $TMPS >/dev/null; then
 	if grep '\.protected.*bar' $TMPS >/dev/null; then
 	    has_visibility_attribute=yes
@@ -248,7 +248,7 @@ int main(void) {
 }
 EOF
 has_sigaction=no
-if $cc $TMPC -o $TMPE >/dev/null 2>&1; then
+if $cc $LDFLAGS $TMPC -o $TMPE >/dev/null 2>&1; then
     if $TMPE; then
 	has_sigaction=yes
     fi
@@ -276,7 +276,7 @@ int main(void)
 }
 EOF
 compiler="unknown"
-if $cc $TMPC -o $TMPE >/dev/null 2>&1; then
+if $cc $LDFLAGS $TMPC -o $TMPE >/dev/null 2>&1; then
     compiler=`$TMPE`
 fi
 rm -f $TMPC $TMPE
@@ -390,6 +390,7 @@ echo "COMPILER=$compiler" >> $config_mak
 echo "CC=$cc" >> $config_mak
 echo "CFLAGS=$CFLAGS" >> $config_mak
 echo "COMPILER=$compiler" >> $config_mak
+echo "LDFLAGS=$LDFLAGS" >> $config_mak
 if test "$target_os" = "linux"; then
     echo "OS=linux" >> $config_mak
     echo "#define TARGET_LINUX 1" >> $config_h

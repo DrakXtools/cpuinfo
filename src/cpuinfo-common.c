@@ -562,7 +562,7 @@ static const cpuinfo_feature_string_t *cpuinfo_feature_string_ptr(int feature)
   case CPUINFO_FEATURE_ARM:
 	fsp = arm_feature_strings;
 	fss = n_arm_feature_strings;
-
+	break;
   }
   if (fsp) {
 #ifdef HAVE_DESIGNATED_INITIALIZERS

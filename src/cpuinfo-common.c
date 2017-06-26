@@ -530,6 +530,13 @@ static const cpuinfo_feature_string_t arm_feature_strings[] = {
   DEFINE_(ARM_CRYPTO_SHA1, 	"sha1",		"SHA1 cryptographic extensions"),
   DEFINE_(ARM_CRYPTO_SHA2, 	"sha2",		"SHA2-256 cryptographic extensions"),
   DEFINE_(ARM_CRYPTO_CRC32, 	"crc32",	"CRC32 instruction extensions"),
+
+  DEFINE_(AARCH64,		"[aarch64]",	"-- aarch64-specific features --"),
+  DEFINE_(AARCH64_FP,		"fp",		"Floating Point"),
+  DEFINE_(AARCH64_ASIMD,	"asimd",	"Advanced SIMD"),
+  DEFINE_(AARCH64_ATOMICS,	"atomics",	"Atomics"),
+  DEFINE_(AARCH64_FPHP,		"fphp",		"Floating Point, High Precision"),
+  DEFINE_(AARCH64_ASIMDHP,	"asimdhp",	"Advanced SIMD, High Precision"),
 };
 
 static const int n_arm_feature_strings = sizeof(arm_feature_strings) / sizeof(arm_feature_strings[0]);

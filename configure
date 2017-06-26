@@ -61,6 +61,9 @@ mips64)
 arm*)
     target_cpu="arm"
     ;;
+aarch64)
+    target_cpu="aarch64"
+    ;;
 *)
     target_cpu="unknown"
     ;;
@@ -467,6 +470,11 @@ elif test "$target_cpu" = "arm" ; then
     echo "CPUINFO_ARCH=arm" >> $config_mak
     echo "#define TARGET_ARM 1" >> $config_h
     echo "#define TARGET_ARCH \"arm\"" >> $config_h
+elif test "$target_cpu" = "aarch64" ; then
+    echo "ARCH=aarch64" >> $config_mak
+    echo "CPUINFO_ARCH=arm" >> $config_mak
+    echo "#define TARGET_AARCH64 1" >> $config_h
+    echo "#define TARGET_ARCH \"aarch64\"" >> $config_h
 else
     echo "ERROR: Unsupported CPU"
     exit 1

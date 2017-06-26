@@ -120,12 +120,29 @@ uint32_t *cpuinfo_arch_feature_table(struct cpuinfo *cip, int feature)
   return NULL;
 }
 
+#if defined(__arm__)
 #define feature_get_bit(NAME) cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_ARM_##NAME)
 #define feature_set_bit(NAME) cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_ARM_##NAME)
+#elif defined(__aarch64__)
+#define HWCAP_FP		(1 << 0)
+#define HWCAP_ASIMD		(1 << 1)
+#define HWCAP_EVTSTRM		(1 << 2)
+#define HWCAP_AES		(1 << 3)
+#define HWCAP_PMULL		(1 << 4)
+#define HWCAP_SHA1		(1 << 5)
+#define HWCAP_SHA2		(1 << 6)
+#define HWCAP_CRC32		(1 << 7)
+#define HWCAP_ATOMICS		(1 << 8)
+#define HWCAP_FPHP		(1 << 9)
+#define HWCAP_ASIMDHP		(1 << 10)
+#define feature_get_bit(NAME) cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_AARCH64_##NAME)
+#define feature_set_bit(NAME) cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_AARCH64_##NAME)
+#endif
 
 // Returns 1 if CPU supports the specified feature
 int cpuinfo_arch_has_feature(struct cpuinfo *cip, unsigned long feature)
 {
+#ifdef __arm__
     if (!cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_ARM)) {
 	cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_ARM);
 
@@ -156,6 +173,42 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, unsigned long feature)
 
 	if (feature_get_bit(NEON))
 	    cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_POPCOUNT);
+
+#elif defined(__aarch64__)
+    if (!cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_AARCH64)) {
+	unsigned long type = getauxval(AT_HWCAP);
+
+	cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_AARCH64);
+	cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_64BIT);
+
+	if (type & HWCAP_FP)
+	    feature_set_bit(FP);
+	if (type & HWCAP_ASIMD)
+	    feature_set_bit(ASIMD);
+	if (type & HWCAP_EVTSTRM)
+	    feature_set_bit(EVTSTRM);
+	if (type & HWCAP_AES)
+	    feature_set_bit(CRYPTO_AES);
+	if (type & HWCAP_PMULL)
+	    feature_set_bit(CRYPTO_PMULL);
+	if (type & HWCAP_SHA1)
+	    feature_set_bit(CRYPTO_SHA1);
+	if (type & HWCAP_SHA2)
+	    feature_set_bit(CRYPTO_SHA2);
+	if (type & HWCAP_CRC32)
+	    feature_set_bit(CRYPTO_CRC32);
+	if (type & HWCAP_ATOMICS)
+	    feature_set_bit(ATOMICS);
+	if (type & HWCAP_FPHP)
+	    feature_set_bit(FPHP);
+	if (type & HWCAP_ASIMDHP)
+	    feature_set_bit(ASIMDHP);
+
+	if (feature_get_bit(ASIMD)) {
+	    cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_SIMD);
+	    cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_POPCOUNT);
+	}
+#endif
 
 	if (feature_get_bit(CRYPTO_AES) ||
 		feature_get_bit(CRYPTO_PMULL) ||

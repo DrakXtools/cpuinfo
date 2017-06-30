@@ -3,6 +3,8 @@ Copyright (C)	2006-2007 Gwenole Beauchesne
 		2009-2016 Per Øyvind Karlsen
 
 * Support for arm & aarch64 added
+* Python bindings added
+* Instruction set detection on x86 updated
 
 Version 1.0 (SNAPSHOT) - 15.Jul.2007
 * Relicense the library under LGPL

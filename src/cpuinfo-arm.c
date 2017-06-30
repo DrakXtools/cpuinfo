@@ -26,6 +26,7 @@
 #include <sys/utsname.h>
 #endif
 #include <sys/auxv.h>
+#include <asm/hwcap.h>
 #include "cpuinfo.h"
 #include "cpuinfo-private.h"
 
@@ -33,12 +34,21 @@
 #include "debug.h"
 
 
+#ifdef __arm__
 cpuinfo_feature_t cpuinfo_feature_architecture = CPUINFO_FEATURE_ARM,
 		  cpuinfo_feature_architecture_max = CPUINFO_FEATURE_ARM_MAX;
+#else
+cpuinfo_feature_t cpuinfo_feature_architecture = CPUINFO_FEATURE_AARCH64,
+		  cpuinfo_feature_architecture_max = CPUINFO_FEATURE_AARCH64_MAX;
+#endif
 
 // Arch-dependent data
 struct arm_cpuinfo {
+#ifdef __arm__
   uint32_t features[CPUINFO_FEATURES_SZ_(ARM)];
+#else
+  uint32_t features[CPUINFO_FEATURES_SZ_(AARCH64)];
+#endif
 };
 
 typedef struct arm_cpuinfo arm_cpuinfo_t;
@@ -115,26 +125,16 @@ uint32_t *cpuinfo_arch_feature_table(struct cpuinfo *cip, int feature)
   case CPUINFO_FEATURE_COMMON:
 	return cip->features;
   case CPUINFO_FEATURE_ARM:
+  case CPUINFO_FEATURE_AARCH64:
 	return ((arm_cpuinfo_t *)(cip->opaque))->features;
   }
   return NULL;
 }
 
-#if defined(__arm__)
+#if (__arm__)
 #define feature_get_bit(NAME) cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_ARM_##NAME)
 #define feature_set_bit(NAME) cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_ARM_##NAME)
-#elif defined(__aarch64__)
-#define HWCAP_FP		(1 << 0)
-#define HWCAP_ASIMD		(1 << 1)
-#define HWCAP_EVTSTRM		(1 << 2)
-#define HWCAP_AES		(1 << 3)
-#define HWCAP_PMULL		(1 << 4)
-#define HWCAP_SHA1		(1 << 5)
-#define HWCAP_SHA2		(1 << 6)
-#define HWCAP_CRC32		(1 << 7)
-#define HWCAP_ATOMICS		(1 << 8)
-#define HWCAP_FPHP		(1 << 9)
-#define HWCAP_ASIMDHP		(1 << 10)
+#else
 #define feature_get_bit(NAME) cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_AARCH64_##NAME)
 #define feature_set_bit(NAME) cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_AARCH64_##NAME)
 #endif
@@ -142,39 +142,33 @@ uint32_t *cpuinfo_arch_feature_table(struct cpuinfo *cip, int feature)
 // Returns 1 if CPU supports the specified feature
 int cpuinfo_arch_has_feature(struct cpuinfo *cip, unsigned long feature)
 {
-#ifdef __arm__
+#if defined(__arm__)
     if (!cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_ARM)) {
+	int end = CPUINFO_FEATURE_ARM_MAX-CPUINFO_FEATURE_ARM;
+
 	cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_ARM);
 
-	for (unsigned long feat = CPUINFO_FEATURE_ARM+1; feat < CPUINFO_FEATURE_ARM_MAX; feat++) {
-	    unsigned long type = 0;
-	    unsigned long hwcap = 0;
-	    unsigned long offset = CPUINFO_FEATURE_ARM;
+	for (int i = 0; i < end; i++) {
+	    unsigned long hwcap = (1<<i);
+	    unsigned long type = AT_HWCAP;
+	    int j = 0;
+	    if (i == CPUINFO_FEATURE_ARM_MAX-CPUINFO_FEATURE_ARM_CRYPTO) {
+		type = getauxval(AT_HWCAP2);
+		hwcap = (1<<j++);
+		if (type & hwcap)
+		    cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_ARM_CRYPTO + i);
 
-	    if (feat > CPUINFO_FEATURE_ARM_CRYPTO) {
-		hwcap = (1 << (feat - CPUINFO_FEATURE_ARM_CRYPTO-1));
-		type = AT_HWCAP2;
-	    } else if (feat < CPUINFO_FEATURE_ARM_CRYPTO) {
-		if (feat == CPUINFO_FEATURE_ARM_IDIV)
-		    hwcap = ((1 << (CPUINFO_FEATURE_ARM_IDIVA - offset)) |
-			    (1 << (CPUINFO_FEATURE_ARM_IDIVT - offset)));
-		else
-		    hwcap = (1 << (feat - offset));
-		type = AT_HWCAP;
+	    } else {
+		type = getauxval(type);
+		if (type & hwcap)
+		    cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_ARM + i);
+		if (hwcap == HWCAP_IDIVT && (type & HWCAP_IDIV))
+		    feature_set_bit(IDIV);
 	    }
-
-	    if ((getauxval(type) & hwcap))
-		cpuinfo_feature_set_bit(cip, feat);
 	}
-
-	if (feature_get_bit(IWMMXT) ||
-		feature_get_bit(NEON))
-	    cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_SIMD);
-
-	if (feature_get_bit(NEON))
-	    cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_POPCOUNT);
-
-#elif defined(__aarch64__)
+    }
+#endif
+#if defined(__aarch64__)
     if (!cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_AARCH64)) {
 	unsigned long type = getauxval(AT_HWCAP);
 
@@ -187,6 +181,7 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, unsigned long feature)
 	    feature_set_bit(ASIMD);
 	if (type & HWCAP_EVTSTRM)
 	    feature_set_bit(EVTSTRM);
+
 	if (type & HWCAP_AES)
 	    feature_set_bit(CRYPTO_AES);
 	if (type & HWCAP_PMULL)
@@ -197,6 +192,7 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, unsigned long feature)
 	    feature_set_bit(CRYPTO_SHA2);
 	if (type & HWCAP_CRC32)
 	    feature_set_bit(CRYPTO_CRC32);
+
 	if (type & HWCAP_ATOMICS)
 	    feature_set_bit(ATOMICS);
 	if (type & HWCAP_FPHP)
@@ -204,19 +200,21 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, unsigned long feature)
 	if (type & HWCAP_ASIMDHP)
 	    feature_set_bit(ASIMDHP);
 
-	if (feature_get_bit(ASIMD)) {
+	if (feature_get_bit(ASIMD))
 	    cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_SIMD);
-	    cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_POPCOUNT);
-	}
+    }
 #endif
 
-	if (feature_get_bit(CRYPTO_AES) ||
-		feature_get_bit(CRYPTO_PMULL) ||
-		feature_get_bit(CRYPTO_SHA1) ||
-		feature_get_bit(CRYPTO_SHA2) ||
-		feature_get_bit(CRYPTO_CRC32))
-	    cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_CRYPTO);
-    }
 
-  return cpuinfo_feature_get_bit(cip, feature);
+    if (cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_SIMD))
+	cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_POPCOUNT);
+
+    if (feature_get_bit(CRYPTO_AES) ||
+	    feature_get_bit(CRYPTO_PMULL) ||
+	    feature_get_bit(CRYPTO_SHA1) ||
+	    feature_get_bit(CRYPTO_SHA2) ||
+	    feature_get_bit(CRYPTO_CRC32))
+	cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_CRYPTO);
+
+    return cpuinfo_feature_get_bit(cip, feature);
 }

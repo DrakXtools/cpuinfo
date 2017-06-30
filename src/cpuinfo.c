@@ -101,11 +101,8 @@ static void print_cpuinfo(struct cpuinfo *cip, FILE *out)
 	{ CPUINFO_FEATURE_IA64, CPUINFO_FEATURE_IA64_MAX },
 	{ CPUINFO_FEATURE_PPC, CPUINFO_FEATURE_PPC_MAX },
 	{ CPUINFO_FEATURE_MIPS, CPUINFO_FEATURE_MIPS_MAX },
-#if defined(__arm__)
 	{ CPUINFO_FEATURE_ARM, CPUINFO_FEATURE_ARM_MAX },
-#elif defined(__aarch64__)
-	{ CPUINFO_FEATURE_ARM, CPUINFO_FEATURE_AARCH64_MAX },
-#endif
+	{ CPUINFO_FEATURE_AARCH64, CPUINFO_FEATURE_AARCH64_MAX },
 	{ -1, 0 }
   };
   for (i = 0; features_bits[i].base != -1; i++) {

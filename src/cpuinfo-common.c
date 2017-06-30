@@ -357,6 +357,9 @@ typedef struct {
   const char *detail;
 } cpuinfo_feature_string_t;
 
+
+#define constexp(exp) (__builtin_constant_p (exp) ? (exp) : (exp))
+
 #ifdef HAVE_DESIGNATED_INITIALIZERS
 #define DEFINE_(ID, NAME, DETAIL) \
 		[CPUINFO_FEATURE_##ID & CPUINFO_FEATURE_MASK] = { NAME, DETAIL }
@@ -372,7 +375,7 @@ static const cpuinfo_feature_string_t common_feature_strings[] = {
   DEFINE_(CRYPTO,		"crypto",	"Cryptographic extensions"),
 };
 
-static const int n_common_feature_strings = sizeof(common_feature_strings) / sizeof(common_feature_strings[0]);
+static const uint32_t n_common_feature_strings = constexp(sizeof(common_feature_strings) / sizeof(common_feature_strings[0]));
 
 static const cpuinfo_feature_string_t x86_feature_strings[] = {
   DEFINE_(X86,			"[x86]",	"-- x86-specific features --"),
@@ -469,7 +472,7 @@ static const cpuinfo_feature_string_t x86_feature_strings[] = {
 
 };
 
-static const int n_x86_feature_strings = sizeof(x86_feature_strings) / sizeof(x86_feature_strings[0]);
+static const uint32_t n_x86_feature_strings = constexp(sizeof(x86_feature_strings) / sizeof(x86_feature_strings[0]));
 
 static const cpuinfo_feature_string_t ia64_feature_strings[] = {
   DEFINE_(IA64,			"[ia64]",	"-- ia64-specific features --"),
@@ -478,7 +481,7 @@ static const cpuinfo_feature_string_t ia64_feature_strings[] = {
   DEFINE_(IA64_AO,		"ao",		"16-byte atomic operations"),
 };
 
-static const int n_ia64_feature_strings = sizeof(ia64_feature_strings) / sizeof(ia64_feature_strings[0]);
+static const uint32_t n_ia64_feature_strings = constexp(sizeof(ia64_feature_strings) / sizeof(ia64_feature_strings[0]));
 
 static const cpuinfo_feature_string_t ppc_feature_strings[] = {
   DEFINE_(PPC,			"[ppc]",	"-- ppc-specific features --"),
@@ -491,15 +494,15 @@ static const cpuinfo_feature_string_t ppc_feature_strings[] = {
   DEFINE_(PPC_MFPGPR,		"mfpgpr",	"PowerPC V2.05 move floating point to/from GPR instructions"),
 };
 
-static const int n_ppc_feature_strings = sizeof(ppc_feature_strings) / sizeof(ppc_feature_strings[0]);
+static const uint32_t n_ppc_feature_strings = constexp(sizeof(ppc_feature_strings) / sizeof(ppc_feature_strings[0]));
 
 static const cpuinfo_feature_string_t mips_feature_strings[] = {
   DEFINE_(MIPS,			"[mips]",	"-- mips-specific features --"),
 };
 
-static const int n_mips_feature_strings = sizeof(mips_feature_strings) / sizeof(mips_feature_strings[0]);
+static const uint32_t n_mips_feature_strings = constexp(sizeof(mips_feature_strings) / sizeof(mips_feature_strings[0]));
 
-static const cpuinfo_feature_string_t arm_feature_strings[] = {
+static const  cpuinfo_feature_string_t arm_feature_strings[] = {
   DEFINE_(ARM,			"[arm]",	"-- arm-specific features --"),
   DEFINE_(ARM_SWP,	 	"swp",		"SWP instruction (atomic read-modify-write)"),
   DEFINE_(ARM_HALF,	 	"half",		"Half-word loads and stores"),
@@ -530,7 +533,11 @@ static const cpuinfo_feature_string_t arm_feature_strings[] = {
   DEFINE_(ARM_CRYPTO_SHA1, 	"sha1",		"SHA1 cryptographic extensions"),
   DEFINE_(ARM_CRYPTO_SHA2, 	"sha2",		"SHA2-256 cryptographic extensions"),
   DEFINE_(ARM_CRYPTO_CRC32, 	"crc32",	"CRC32 instruction extensions"),
+};
 
+static const uint32_t n_arm_feature_strings = constexp((sizeof(arm_feature_strings) / sizeof(arm_feature_strings[0])));//)(CPUINFO_FEATURE_ARM_MAX-CPUINFO_FEATURE_ARM-1));
+
+static const cpuinfo_feature_string_t aarch64_feature_strings[] = {
   DEFINE_(AARCH64,		"[aarch64]",	"-- aarch64-specific features --"),
   DEFINE_(AARCH64_FP,		"fp",		"Floating Point"),
   DEFINE_(AARCH64_ASIMD,	"asimd",	"Advanced SIMD"),
@@ -539,7 +546,7 @@ static const cpuinfo_feature_string_t arm_feature_strings[] = {
   DEFINE_(AARCH64_ASIMDHP,	"asimdhp",	"Advanced SIMD, High Precision"),
 };
 
-static const int n_arm_feature_strings = sizeof(arm_feature_strings) / sizeof(arm_feature_strings[0]);
+static const uint32_t n_aarch64_feature_strings = constexp(sizeof(aarch64_feature_strings) / sizeof(aarch64_feature_strings[0]));
 
 #undef DEFINE_
 
@@ -571,6 +578,10 @@ static const cpuinfo_feature_string_t *cpuinfo_feature_string_ptr(int feature)
   case CPUINFO_FEATURE_ARM:
 	fsp = arm_feature_strings;
 	fss = n_arm_feature_strings;
+	break;
+  case CPUINFO_FEATURE_AARCH64:
+	fss = n_aarch64_feature_strings;
+	fsp = aarch64_feature_strings;
 	break;
   }
   if (fsp) {

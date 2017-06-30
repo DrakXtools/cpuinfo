@@ -2,6 +2,8 @@ cpuinfo NEWS -- history of human-readable changes.  2017-07-01
 Copyright (C)	2006-2007 Gwenole Beauchesne
 		2009-2016 Per Øyvind Karlsen
 
+* Support for arm & aarch64 added
+
 Version 1.0 (SNAPSHOT) - 15.Jul.2007
 * Relicense the library under LGPL
 * Add Perl bindings

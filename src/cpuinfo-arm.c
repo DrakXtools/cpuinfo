@@ -90,7 +90,11 @@ int cpuinfo_arch_get_vendor(struct cpuinfo *cip)
 // Get processor name
 char *cpuinfo_arch_get_model(struct cpuinfo *cip)
 {
-    return "ARM";
+#ifdef __arm__
+    return strdup("ARM");
+#else
+    return strdup("AArch64");
+#endif
 }
 
 // Get processor frequency in MHz

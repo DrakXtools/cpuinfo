@@ -22,6 +22,7 @@
 #include <signal.h>
 #include <setjmp.h>
 #include <assert.h>
+#include <stdalign.h>
 #include "cpuinfo.h"
 #include "cpuinfo-private.h"
 
@@ -358,7 +359,7 @@ typedef struct {
 } cpuinfo_feature_string_t;
 
 
-#define constexp(exp) (__builtin_constant_p (exp) ? (exp) : (exp))
+#define constexpr(exp) const alignas(exp) exp
 
 #ifdef HAVE_DESIGNATED_INITIALIZERS
 #define DEFINE_(ID, NAME, DETAIL) \
@@ -375,7 +376,7 @@ static const cpuinfo_feature_string_t common_feature_strings[] = {
   DEFINE_(CRYPTO,		"crypto",	"Cryptographic extensions"),
 };
 
-static const uint32_t n_common_feature_strings = constexp(sizeof(common_feature_strings) / sizeof(common_feature_strings[0]));
+static constexpr(int) n_common_feature_strings = sizeof(common_feature_strings) / sizeof(common_feature_strings[0]);
 
 static const cpuinfo_feature_string_t x86_feature_strings[] = {
   DEFINE_(X86,			"[x86]",	"-- x86-specific features --"),
@@ -472,7 +473,7 @@ static const cpuinfo_feature_string_t x86_feature_strings[] = {
 
 };
 
-static const uint32_t n_x86_feature_strings = constexp(sizeof(x86_feature_strings) / sizeof(x86_feature_strings[0]));
+static constexpr(int) n_x86_feature_strings = sizeof(x86_feature_strings) / sizeof(x86_feature_strings[0]);
 
 static const cpuinfo_feature_string_t ia64_feature_strings[] = {
   DEFINE_(IA64,			"[ia64]",	"-- ia64-specific features --"),
@@ -481,7 +482,7 @@ static const cpuinfo_feature_string_t ia64_feature_strings[] = {
   DEFINE_(IA64_AO,		"ao",		"16-byte atomic operations"),
 };
 
-static const uint32_t n_ia64_feature_strings = constexp(sizeof(ia64_feature_strings) / sizeof(ia64_feature_strings[0]));
+static constexpr(int) n_ia64_feature_strings = sizeof(ia64_feature_strings) / sizeof(ia64_feature_strings[0]);
 
 static const cpuinfo_feature_string_t ppc_feature_strings[] = {
   DEFINE_(PPC,			"[ppc]",	"-- ppc-specific features --"),
@@ -494,15 +495,15 @@ static const cpuinfo_feature_string_t ppc_feature_strings[] = {
   DEFINE_(PPC_MFPGPR,		"mfpgpr",	"PowerPC V2.05 move floating point to/from GPR instructions"),
 };
 
-static const uint32_t n_ppc_feature_strings = constexp(sizeof(ppc_feature_strings) / sizeof(ppc_feature_strings[0]));
+static constexpr(int) n_ppc_feature_strings = sizeof(ppc_feature_strings) / sizeof(ppc_feature_strings[0]);
 
 static const cpuinfo_feature_string_t mips_feature_strings[] = {
   DEFINE_(MIPS,			"[mips]",	"-- mips-specific features --"),
 };
 
-static const uint32_t n_mips_feature_strings = constexp(sizeof(mips_feature_strings) / sizeof(mips_feature_strings[0]));
+static constexpr(int) n_mips_feature_strings = sizeof(mips_feature_strings) / sizeof(mips_feature_strings[0]);
 
-static const  cpuinfo_feature_string_t arm_feature_strings[] = {
+static const cpuinfo_feature_string_t arm_feature_strings[] = {
   DEFINE_(ARM,			"[arm]",	"-- arm-specific features --"),
   DEFINE_(ARM_SWP,	 	"swp",		"SWP instruction (atomic read-modify-write)"),
   DEFINE_(ARM_HALF,	 	"half",		"Half-word loads and stores"),
@@ -527,15 +528,9 @@ static const  cpuinfo_feature_string_t arm_feature_strings[] = {
   DEFINE_(ARM_LPAE,	 	"lpae",		"Large Physical Address Extension"),
   DEFINE_(ARM_EVTSTRM,	 	"evtstrm",	"Kernel event stream using generic architected timer"),
   DEFINE_(ARM_IDIV,	 	"idiv",		"IDIV instructions, both ARM and Thumb mode"),
-
-  DEFINE_(ARM_CRYPTO_AES, 	"aes",		"AES cryptographic extensions"),
-  DEFINE_(ARM_CRYPTO_PMULL, 	"pmull",	"Binary Polynomial Multiplication Support (PMULL{2})"),
-  DEFINE_(ARM_CRYPTO_SHA1, 	"sha1",		"SHA1 cryptographic extensions"),
-  DEFINE_(ARM_CRYPTO_SHA2, 	"sha2",		"SHA2-256 cryptographic extensions"),
-  DEFINE_(ARM_CRYPTO_CRC32, 	"crc32",	"CRC32 instruction extensions"),
 };
 
-static const uint32_t n_arm_feature_strings = constexp((sizeof(arm_feature_strings) / sizeof(arm_feature_strings[0])));//)(CPUINFO_FEATURE_ARM_MAX-CPUINFO_FEATURE_ARM-1));
+static constexpr(int) n_arm_feature_strings = sizeof(arm_feature_strings) / sizeof(arm_feature_strings[0]);
 
 static const cpuinfo_feature_string_t aarch64_feature_strings[] = {
   DEFINE_(AARCH64,		"[aarch64]",	"-- aarch64-specific features --"),
@@ -544,14 +539,26 @@ static const cpuinfo_feature_string_t aarch64_feature_strings[] = {
   DEFINE_(AARCH64_ATOMICS,	"atomics",	"Atomics"),
   DEFINE_(AARCH64_FPHP,		"fphp",		"Floating Point, High Precision"),
   DEFINE_(AARCH64_ASIMDHP,	"asimdhp",	"Advanced SIMD, High Precision"),
+
 };
 
-static const uint32_t n_aarch64_feature_strings = constexp(sizeof(aarch64_feature_strings) / sizeof(aarch64_feature_strings[0]));
+static constexpr(int) n_aarch64_feature_strings = sizeof(aarch64_feature_strings) / sizeof(aarch64_feature_strings[0]);
+
+static const cpuinfo_feature_string_t arm_crypto_feature_strings[] = {
+  DEFINE_(ARM_CRYPTO,		"[crypto]",	"-- cryptographic features --"),
+  DEFINE_(ARM_CRYPTO_AES, 	"aes",		"AES cryptographic extensions"),
+  DEFINE_(ARM_CRYPTO_PMULL, 	"pmull",	"Binary Polynomial Multiplication Support (PMULL{2})"),
+  DEFINE_(ARM_CRYPTO_SHA1, 	"sha1",		"SHA1 cryptographic extensions"),
+  DEFINE_(ARM_CRYPTO_SHA2, 	"sha2",		"SHA2-256 cryptographic extensions"),
+  DEFINE_(ARM_CRYPTO_CRC32, 	"crc32",	"CRC32 instruction extensions"),
+};
+
+static constexpr(int) n_arm_crypto_feature_strings = sizeof(arm_crypto_feature_strings) / sizeof(arm_crypto_feature_strings[0]);
 
 #undef DEFINE_
 
 static const cpuinfo_feature_string_t *cpuinfo_feature_string_ptr(int feature)
-{
+ {
   int fss = -1;
   const cpuinfo_feature_string_t *fsp = NULL;
   switch (feature & CPUINFO_FEATURE_ARCH) {
@@ -582,6 +589,10 @@ static const cpuinfo_feature_string_t *cpuinfo_feature_string_ptr(int feature)
   case CPUINFO_FEATURE_AARCH64:
 	fss = n_aarch64_feature_strings;
 	fsp = aarch64_feature_strings;
+	break;
+  case CPUINFO_FEATURE_ARM_CRYPTO:
+	fss = n_arm_crypto_feature_strings;
+	fsp = arm_crypto_feature_strings;
 	break;
   }
   if (fsp) {

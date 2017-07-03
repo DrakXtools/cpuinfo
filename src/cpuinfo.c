@@ -97,12 +97,25 @@ static void print_cpuinfo(struct cpuinfo *cip, FILE *out)
 	int max;
   } features_bits[] = {
 	{ CPUINFO_FEATURE_COMMON + 1, CPUINFO_FEATURE_COMMON_MAX },
+#if defined(__i386__) || defined(__x86_64__)
 	{ CPUINFO_FEATURE_X86, CPUINFO_FEATURE_X86_MAX },
+#endif
+#if defined(__ia64__)
 	{ CPUINFO_FEATURE_IA64, CPUINFO_FEATURE_IA64_MAX },
+#endif
+#if defined(__ppc__) || defined(__ppc64__)
 	{ CPUINFO_FEATURE_PPC, CPUINFO_FEATURE_PPC_MAX },
+#endif
 	{ CPUINFO_FEATURE_MIPS, CPUINFO_FEATURE_MIPS_MAX },
+#if defined(__arm__)
 	{ CPUINFO_FEATURE_ARM, CPUINFO_FEATURE_ARM_MAX },
+#endif
+#if defined(__aarch64__)
 	{ CPUINFO_FEATURE_AARCH64, CPUINFO_FEATURE_AARCH64_MAX },
+#endif
+#if defined(__arm__) || defined(__aarch64__)
+	{ CPUINFO_FEATURE_ARM_CRYPTO, CPUINFO_FEATURE_ARM_CRYPTO_MAX },
+#endif
 	{ -1, 0 }
   };
   for (i = 0; features_bits[i].base != -1; i++) {
@@ -164,12 +177,10 @@ int main(int argc, char *argv[])
 
   print_cpuinfo(cip, out);
 
-#ifndef __arm__
   if (out_filename) { /* debug mode */
 	fprintf(out, "\n### DEBUGGING INFORMATION ###\n\n");
 	cpuinfo_dump(cip, out);
   }
-#endif
 
   if (out != stdout)
 	fclose(out);

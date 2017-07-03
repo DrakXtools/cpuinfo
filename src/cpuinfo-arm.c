@@ -145,8 +145,8 @@ uint32_t *cpuinfo_arch_feature_table(struct cpuinfo *cip, int feature)
 #else
 #define feature_get_bit(NAME) cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_AARCH64_##NAME)
 #define feature_set_bit(NAME) cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_AARCH64_##NAME)
-#define get_bit(i) cpuinfo_feature_get_bit(cip, (CPUINFO_FEATURE_AARCH64_BEGIN+1)+i)
-#define set_bit(i) cpuinfo_feature_set_bit(cip, (CPUINFO_FEATURE_AARCH64_BEGIN+1)+i)
+#define get_bit(i) cpuinfo_feature_get_bit(cip, (CPUINFO_FEATURE_AARCH64_BEGIN)+i)
+#define set_bit(i) cpuinfo_feature_set_bit(cip, (CPUINFO_FEATURE_AARCH64_BEGIN)+i)
 #endif
 
 #define crypto_get_bit(i) (cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_ARM_CRYPTO_BEGIN+i))
@@ -172,6 +172,19 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, unsigned long feature)
 	if (feature_get_bit(NEON))
 	    cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_SIMD);
     }
+    if (!cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_ARM_CRYPTO)) {
+	cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_ARM_CRYPTO);
+	unsigned long hwaux = getauxval(AT_HWCAP2);
+	unsigned long hwcap = (1<<0);
+	int end = CPUINFO_FEATURE_ARM_CRYPTO_MAX-(CPUINFO_FEATURE_ARM_CRYPTO_BEGIN);
+
+	for (int i = 0; i < end; i++, hwcap<<=1) {
+	    if (hwaux & hwcap) {
+		crypto_set_bit(i);
+		cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_CRYPTO);
+	    }
+	}
+    }
 #endif
 #if defined(__aarch64__)
     if (!cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_AARCH64)) {
@@ -184,30 +197,17 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, unsigned long feature)
 
 #if 1
 	for (int i = 0; i < end; i++, hwcap<<=1) {
-	    if (i >= 3 && i <= 7)
-		continue;
-	    if (hwaux & hwcap)
-		set_bit(i);
+	    if (hwaux & hwcap) {
+		if (i >= 3 && i <= 7) {
+		    cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_CRYPTO);
+		    cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_ARM_CRYPTO_BEGIN+(i-3));
+		} else
+		    set_bit(i);
+	    }
 	}
 #endif
 	if (feature_get_bit(ASIMD))
 	    cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_SIMD);
-    }
-#endif
-#if 1
-    if (!cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_ARM_CRYPTO)) {
-	cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_ARM_CRYPTO);
-	unsigned long hwaux = getauxval(AT_HWCAP2);
-	unsigned long hwcap = (1<<0);
-	int end = CPUINFO_FEATURE_ARM_CRYPTO_MAX-(CPUINFO_FEATURE_ARM_CRYPTO_BEGIN);
-
-	for (int i = 0; i < end; i++, hwcap<<=1) {
-	    if (hwaux & hwcap) {
-		crypto_set_bit(i);
-		cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_CRYPTO);
-	    }
-
-	}
     }
 #endif
     if (cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_SIMD))

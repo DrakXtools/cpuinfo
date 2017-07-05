@@ -188,6 +188,7 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, unsigned long feature)
 #else
     if (!cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_AARCH64)) {
 	arch_features(AARCH64);
+	cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_64BIT);
 
 	if (feature_get_bit(ASIMD))
 	    cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_SIMD);

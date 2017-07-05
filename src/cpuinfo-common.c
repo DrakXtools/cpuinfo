@@ -504,7 +504,7 @@ static const cpuinfo_feature_string_t mips_feature_strings[] = {
 static constexpr(int) n_mips_feature_strings = sizeof(mips_feature_strings) / sizeof(mips_feature_strings[0]);
 
 static const cpuinfo_feature_string_t arm_feature_strings[] = {
-  DEFINE_(ARM,			"[arm]",	"-- arm-specific features --"),
+  DEFINE_(ARM_BEGIN,		"[arm]",	"-- arm-specific features --"),
   DEFINE_(ARM_SWP,	 	"swp",		"SWP instruction (atomic read-modify-write)"),
   DEFINE_(ARM_HALF,	 	"half",		"Half-word loads and stores"),
   DEFINE_(ARM_THUMB,	 	"thumb",	"Thumb (16-bit instruction set)"),
@@ -533,7 +533,7 @@ static const cpuinfo_feature_string_t arm_feature_strings[] = {
 static constexpr(int) n_arm_feature_strings = sizeof(arm_feature_strings) / sizeof(arm_feature_strings[0]);
 
 static const cpuinfo_feature_string_t aarch64_feature_strings[] = {
-  DEFINE_(AARCH64,		"[aarch64]",	"-- aarch64-specific features --"),
+  DEFINE_(AARCH64_BEGIN,		"[aarch64]",	"-- aarch64-specific features --"),
   DEFINE_(AARCH64_FP,		"fp",		"Floating Point"),
   DEFINE_(AARCH64_ASIMD,	"asimd",	"Advanced SIMD"),
   DEFINE_(AARCH64_ATOMICS,	"atomics",	"Atomics"),
@@ -545,7 +545,7 @@ static const cpuinfo_feature_string_t aarch64_feature_strings[] = {
 static constexpr(int) n_aarch64_feature_strings = sizeof(aarch64_feature_strings) / sizeof(aarch64_feature_strings[0]);
 
 static const cpuinfo_feature_string_t arm_crypto_feature_strings[] = {
-  DEFINE_(ARM_CRYPTO,		"[crypto]",	"-- cryptographic features --"),
+  DEFINE_(ARM_CRYPTO_BEGIN,	"[crypto]",	"-- cryptographic features --"),
   DEFINE_(ARM_CRYPTO_AES, 	"aes",		"AES cryptographic extensions"),
   DEFINE_(ARM_CRYPTO_PMULL, 	"pmull",	"Binary Polynomial Multiplication Support (PMULL{2})"),
   DEFINE_(ARM_CRYPTO_SHA1, 	"sha1",		"SHA1 cryptographic extensions"),

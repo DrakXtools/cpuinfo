@@ -40,9 +40,9 @@ static void print_cpuinfo(struct cpuinfo *cip, FILE *out)
 
   fprintf(out, "Processor Information\n");
 
-#ifndef __arm__
   int vendor = cpuinfo_get_vendor(cip);
-  fprintf(out, "  Model: %s %s", cpuinfo_string_of_vendor(vendor), cpuinfo_get_model(cip));
+  fprintf(out, "  Model: %s", cpuinfo_get_model(cip));
+#ifndef __arch64__
   int freq = cpuinfo_get_frequency(cip);
   if (freq > 0) {
 	fprintf(out, ", ");
@@ -111,10 +111,10 @@ static void print_cpuinfo(struct cpuinfo *cip, FILE *out)
 	{ CPUINFO_FEATURE_ARM, CPUINFO_FEATURE_ARM_MAX },
 #endif
 #if defined(__aarch64__)
-	{ CPUINFO_FEATURE_AARCH64, CPUINFO_FEATURE_AARCH64_MAX },
+	{ CPUINFO_FEATURE_AARCH64_BEGIN, CPUINFO_FEATURE_AARCH64_MAX },
 #endif
 #if defined(__arm__) || defined(__aarch64__)
-	{ CPUINFO_FEATURE_ARM_CRYPTO, CPUINFO_FEATURE_ARM_CRYPTO_MAX },
+	{ CPUINFO_FEATURE_ARM_CRYPTO_BEGIN, CPUINFO_FEATURE_ARM_CRYPTO_MAX },
 #endif
 	{ -1, 0 }
   };

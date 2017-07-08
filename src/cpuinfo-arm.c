@@ -135,13 +135,10 @@ uint32_t *cpuinfo_arch_feature_table(struct cpuinfo *cip, int feature)
 #define get_bit(base, i) cpuinfo_feature_get_bit(cip, base+i)
 #define set_bit(base, i) cpuinfo_feature_set_bit(cip, base+i)
 
-#if (__arm__)
-#define feature_get_bit(NAME) cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_ARM_##NAME)
-#define feature_set_bit(NAME) cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_ARM_##NAME)
-#else
-#define feature_get_bit(NAME) cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_AARCH64_##NAME)
-#define feature_set_bit(NAME) cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_AARCH64_##NAME)
-#endif
+#define feature_get_32bit(NAME) cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_ARM_##NAME)
+#define feature_set_32bit(NAME) cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_ARM_##NAME)
+#define feature_get_64bit(NAME) cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_AARCH64_##NAME)
+#define feature_set_64bit(NAME) cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_AARCH64_##NAME)
 
 
 static void cpuinfo_arch_features(struct cpuinfo *cip, cpuinfo_feature_t begin, cpuinfo_feature_t features) {
@@ -178,25 +175,24 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, unsigned long feature)
 	arch_features(ARM);
 	arch_features(ARM_CRYPTO);
 
-    if (feature_get_bit(NEON))
+    if (feature_get_32bit(NEON))
 	cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_SIMD);
 
-    if (feature_get_bit(IDIVA) && feature_get_bit(IDIVT))
-	feature_set_bit(IDIV);
+    if (feature_get_32bit(IDIVA) && feature_get_32bit(IDIVT))
+	feature_set_32bit(IDIV);
     }
 #else
     if (!cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_AARCH64)) {
 	arch_features(AARCH64);
 	cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_64BIT);
 
-	if (feature_get_bit(ASIMD))
+	if (feature_get_64bit(ASIMD))
 	    cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_SIMD);
     }
 #endif
 
     if (cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_SIMD))
 	cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_POPCOUNT);
-
 
     for (cpuinfo_feature_t feat = CPUINFO_FEATURE_ARM_CRYPTO_BEGIN+1; feat < CPUINFO_FEATURE_ARM_CRYPTO_MAX; feat++) {
 	if (cpuinfo_feature_get_bit(cip, feat)) {

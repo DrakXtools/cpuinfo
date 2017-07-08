@@ -153,13 +153,12 @@ static void cpuinfo_arch_features(struct cpuinfo *cip, cpuinfo_feature_t begin, 
 
 	if (arch != CPUINFO_FEATURE_ARM_CRYPTO)
 	    cpuinfo_feature_set_bit(cip, begin);
-	for (cpuinfo_feature_t bit = begin+1; bit < features; bit++, hwcap<<=1) {
+	for (cpuinfo_feature_t bit = ++begin; bit < features; bit++, hwcap<<=1) {
 	    if ((hwaux & hwcap)) {
 #if defined(__aarch64__)
 		if (bit >= CPUINFO_FEATURE_AARCH64_CRYPTO_AES &&
 			bit <= CPUINFO_FEATURE_AARCH64_CRYPTO_CRC32) {
-		    cpuinfo_feature_t cryptbit = CPUINFO_FEATURE_ARM_CRYPTO_BEGIN+1 + (bit-(CPUINFO_FEATURE_AARCH64_CRYPTO_AES-begin)-begin);
-		    cpuinfo_feature_set_bit(cip, cryptbit);
+		    cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_ARM_CRYPTO_BEGIN + (bit-(begin+1))-1);
 		} else
 #endif
 		    cpuinfo_feature_set_bit(cip, bit);

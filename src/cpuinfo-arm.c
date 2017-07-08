@@ -148,14 +148,18 @@ static void cpuinfo_arch_features(struct cpuinfo *cip, cpuinfo_feature_t begin, 
 	unsigned long hwaux = getauxval((arch == CPUINFO_FEATURE_ARM_CRYPTO) ? AT_HWCAP2 : AT_HWCAP);
 	unsigned long hwcap = (1<<0);
 
-	if (arch != CPUINFO_FEATURE_ARM_CRYPTO)
-	    cpuinfo_feature_set_bit(cip, begin);
-	for (cpuinfo_feature_t bit = ++begin; bit < features; bit++, hwcap<<=1) {
+	cpuinfo_feature_set_bit(cip, begin);
+#if defined(__aarch64__)
+	cpuinfo_feature_t cryptbit = CPUINFO_FEATURE_ARM_CRYPTO_BEGIN;
+	cpuinfo_feature_set_bit(cip, cryptbit);
+#endif
+
+	for (cpuinfo_feature_t bit = begin+1; bit < features; bit++, hwcap<<=1) {
 	    if ((hwaux & hwcap)) {
 #if defined(__aarch64__)
 		if (bit >= CPUINFO_FEATURE_AARCH64_CRYPTO_AES &&
 			bit <= CPUINFO_FEATURE_AARCH64_CRYPTO_CRC32) {
-		    cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_ARM_CRYPTO_BEGIN + (bit-(begin+1))-1);
+		    cpuinfo_feature_set_bit(cip, ++cryptbit);
 		} else
 #endif
 		    cpuinfo_feature_set_bit(cip, bit);

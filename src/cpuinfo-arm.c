@@ -194,13 +194,9 @@ int cpuinfo_arch_has_feature(struct cpuinfo *cip, unsigned long feature)
     if (cpuinfo_feature_get_bit(cip, CPUINFO_FEATURE_SIMD))
 	cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_POPCOUNT);
 
-    for (cpuinfo_feature_t feat = CPUINFO_FEATURE_ARM_CRYPTO_BEGIN+1; feat < CPUINFO_FEATURE_ARM_CRYPTO_MAX; feat++) {
-	if (cpuinfo_feature_get_bit(cip, feat)) {
-	    cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_ARM_CRYPTO_BEGIN);
-	    cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_CRYPTO);
-	    break;
-	}
-    }
+    uint32_t *feat = cpuinfo_arch_feature_table(cip, feature);
+    if (feat && (*feat & (CPUINFO_FEATURE_ARM_CRYPTO_MAX & CPUINFO_FEATURE_MASK)))
+	cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_CRYPTO);
 
     return cpuinfo_feature_get_bit(cip, feature);
 }

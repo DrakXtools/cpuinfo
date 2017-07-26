@@ -34,7 +34,7 @@ cpuinfo_feature_t cpuinfo_feature_common = CPUINFO_FEATURE_COMMON,
 		  cpuinfo_feature_common_max = CPUINFO_FEATURE_COMMON_MAX;
 
 // Returns a new cpuinfo descriptor
-struct cpuinfo *cpuinfo_new(void)
+cpuinfo_t *cpuinfo_new(void)
 {
   cpuinfo_t *cip = (cpuinfo_t *)malloc(sizeof(*cip));
   if (cip) {
@@ -58,7 +58,7 @@ struct cpuinfo *cpuinfo_new(void)
 }
 
 // Release the cpuinfo descriptor and all allocated data
-void cpuinfo_destroy(struct cpuinfo *cip)
+void cpuinfo_destroy(cpuinfo_t *cip)
 {
   if (cip) {
 	cpuinfo_arch_destroy(cip);
@@ -70,7 +70,7 @@ void cpuinfo_destroy(struct cpuinfo *cip)
   }
 }
 
-void cpuinfo_get_endian(struct cpuinfo *cip) {
+void cpuinfo_get_endian(cpuinfo_t *cip) {
     union _dbswap {
 	uint32_t ui;
 	unsigned char uc[4];
@@ -87,7 +87,7 @@ void cpuinfo_get_endian(struct cpuinfo *cip) {
 }
 
 // Get processor vendor ID 
-int cpuinfo_get_vendor(struct cpuinfo *cip)
+int cpuinfo_get_vendor(cpuinfo_t *cip)
 {
   if (cip == NULL)
 	return -1;
@@ -100,7 +100,7 @@ int cpuinfo_get_vendor(struct cpuinfo *cip)
 }
 
 // Get processor name
-const char *cpuinfo_get_model(struct cpuinfo *cip)
+const char *cpuinfo_get_model(cpuinfo_t *cip)
 {
   if (cip == NULL)
 	return NULL;
@@ -117,7 +117,7 @@ const char *cpuinfo_get_model(struct cpuinfo *cip)
 }
 
 // Get processor frequency in MHz
-int cpuinfo_get_frequency(struct cpuinfo *cip)
+int cpuinfo_get_frequency(cpuinfo_t *cip)
 {
   if (cip == NULL)
 	return -1;
@@ -127,7 +127,7 @@ int cpuinfo_get_frequency(struct cpuinfo *cip)
 }
 
 // Get processor socket ID
-int cpuinfo_get_socket(struct cpuinfo *cip)
+int cpuinfo_get_socket(cpuinfo_t *cip)
 {
   if (cip == NULL)
 	return -1;
@@ -140,7 +140,7 @@ int cpuinfo_get_socket(struct cpuinfo *cip)
 }
 
 // Get number of cores per CPU package
-int cpuinfo_get_cores(struct cpuinfo *cip)
+int cpuinfo_get_cores(cpuinfo_t *cip)
 {
   if (cip == NULL)
 	return -1;
@@ -153,7 +153,7 @@ int cpuinfo_get_cores(struct cpuinfo *cip)
 }
 
 // Get number of threads per CPU core
-int cpuinfo_get_threads(struct cpuinfo *cip)
+int cpuinfo_get_threads(cpuinfo_t *cip)
 {
   if (cip == NULL)
 	return -1;
@@ -203,7 +203,7 @@ static int cache_desc_compare(const void *a, const void *b)
 }
 
 // Get cache information (returns read-only descriptors)
-const cpuinfo_cache_t *cpuinfo_get_caches(struct cpuinfo *cip)
+const cpuinfo_cache_t *cpuinfo_get_caches(cpuinfo_t *cip)
 {
   if (cip == NULL)
 	return NULL;
@@ -235,7 +235,7 @@ const cpuinfo_cache_t *cpuinfo_get_caches(struct cpuinfo *cip)
 }
 
 // Returns 1 if CPU supports the specified feature
-int cpuinfo_has_feature(struct cpuinfo *cip, int feature)
+int cpuinfo_has_feature(cpuinfo_t *cip, int feature)
 {
 #ifdef HAVE_SYS_PERSONALITY_H
   if((feature == CPUINFO_FEATURE_64BIT) && (personality(0xffffffff) & PER_MASK) == PER_LINUX32)
@@ -289,7 +289,7 @@ int cpuinfo_feature_test_function(cpuinfo_feature_test_function_t func)
 }
 
 // Accessors for cpuinfo_features[] table
-int cpuinfo_feature_get_bit(struct cpuinfo *cip, int feature)
+int cpuinfo_feature_get_bit(cpuinfo_t *cip, int feature)
 {
   uint32_t *ftp = cpuinfo_arch_feature_table(cip, feature);
   if (ftp) {
@@ -299,7 +299,7 @@ int cpuinfo_feature_get_bit(struct cpuinfo *cip, int feature)
   return 0;
 }
 
-void cpuinfo_feature_set_bit(struct cpuinfo *cip, int feature)
+void cpuinfo_feature_set_bit(cpuinfo_t *cip, int feature)
 {
   uint32_t *ftp = cpuinfo_arch_feature_table(cip, feature);
   if (ftp) {

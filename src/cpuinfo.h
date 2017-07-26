@@ -63,7 +63,7 @@ typedef enum {
   CPUINFO_VENDOR_PASEMI
 } cpuinfo_vendor_t;
 
-void cpuinfo_get_endian(struct cpuinfo *cip);
+void cpuinfo_get_endian(cpuinfo_t *cip);
 
 // Get processor vendor ID 
 extern int cpuinfo_get_vendor(cpuinfo_t *cip);

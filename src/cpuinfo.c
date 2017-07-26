@@ -106,7 +106,9 @@ static void print_cpuinfo(struct cpuinfo *cip, FILE *out)
 #if defined(__ppc__) || defined(__ppc64__)
 	{ CPUINFO_FEATURE_PPC, CPUINFO_FEATURE_PPC_MAX },
 #endif
+#if defined(__mips__) || defined(__mips64__)
 	{ CPUINFO_FEATURE_MIPS, CPUINFO_FEATURE_MIPS_MAX },
+#endif
 #if defined(__arm__)
 	{ CPUINFO_FEATURE_ARM, CPUINFO_FEATURE_ARM_MAX },
 #endif

@@ -553,13 +553,17 @@ static const cpuinfo_feature_string_t arm_feature_strings[] = {
 static constexpr(int) n_arm_feature_strings = sizeof(arm_feature_strings) / sizeof(arm_feature_strings[0]);
 
 static const cpuinfo_feature_string_t aarch64_feature_strings[] = {
-  DEFINE_(AARCH64_BEGIN,		"[aarch64]",	"-- aarch64-specific features --"),
+  DEFINE_(AARCH64_BEGIN,	"[aarch64]",	"-- aarch64-specific features --"),
   DEFINE_(AARCH64_FP,		"fp",		"Floating Point"),
   DEFINE_(AARCH64_ASIMD,	"asimd",	"Advanced SIMD"),
   DEFINE_(AARCH64_ATOMICS,	"atomics",	"Atomics"),
   DEFINE_(AARCH64_FPHP,		"fphp",		"Floating Point, High Precision"),
   DEFINE_(AARCH64_ASIMDHP,	"asimdhp",	"Advanced SIMD, High Precision"),
-
+  DEFINE_(AARCH64_CPUID,	"cpuid",	"Exposed cpuid register"),
+  DEFINE_(AARCH64_ASIMDRDM,	"asimdrdm",	"Rounding double multiply"),
+  DEFINE_(AARCH64_JSCVT,	"jscvt",	"Javascript conversion"),
+  DEFINE_(AARCH64_FCMA,		"fcma",		"Floating-point multiplication and addition of complex numbers"),
+  DEFINE_(AARCH64_LRCPC,	"lrcpc",	"Release Consistent processor consistent"),
 };
 
 static constexpr(int) n_aarch64_feature_strings = sizeof(aarch64_feature_strings) / sizeof(aarch64_feature_strings[0]);

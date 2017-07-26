@@ -127,9 +127,9 @@ static void print_cpuinfo(struct cpuinfo *cip, FILE *out)
 		const char *name = cpuinfo_string_of_feature(feature);
 		const char *detail = cpuinfo_string_of_feature_detail(feature);
 		if (name && detail)
-		  fprintf(out, "  %-10s %s\n", name, detail);
+		  fprintf(out, "  %-12s %s\n", name, detail);
 		else
-		  fprintf(out, "  %-10s No description for feature %08x\n", "<error>", feature);
+		  fprintf(out, "  %-12s No description for feature %08x\n", "<error>", feature);
 	  }
 	  if (feature == CPUINFO_FEATURE_COMMON_MAX-1)
 	      fprintf(out, "\n");

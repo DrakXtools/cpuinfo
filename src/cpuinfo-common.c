@@ -52,6 +52,7 @@ struct cpuinfo *cpuinfo_new(void)
 	  free(cip);
 	  return NULL;
 	}
+	cpuinfo_get_endian(cip);
   }
   return cip;
 }
@@ -67,6 +68,22 @@ void cpuinfo_destroy(struct cpuinfo *cip)
 	  free((void *)cip->cache_info.descriptors);
 	free(cip);
   }
+}
+
+void cpuinfo_get_endian(struct cpuinfo *cip) {
+    union _dbswap {
+	uint32_t ui;
+	unsigned char uc[4];
+    };
+    static union _dbswap orderedbytes = { .ui = 0x11223344 };
+
+    if(orderedbytes.uc[0] == 0x44)
+	cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_LITTLE_ENDIAN);
+    else if(orderedbytes.uc[0] == 0x11)
+	cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_BIG_ENDIAN);
+    else if(orderedbytes.uc[0] == 0x22)
+	cpuinfo_feature_set_bit(cip, CPUINFO_FEATURE_MIDDLE_ENDIAN);
+
 }
 
 // Get processor vendor ID 
@@ -374,6 +391,9 @@ static const cpuinfo_feature_string_t common_feature_strings[] = {
   DEFINE_(SIMD,			"simd",		"SIMD instructions"),
   DEFINE_(POPCOUNT,		"popcount",	"Population count instruction"),
   DEFINE_(CRYPTO,		"crypto",	"Cryptographic extensions"),
+  DEFINE_(LITTLE_ENDIAN,	"littleendian",	"Little endian"),
+  DEFINE_(MIDDLE_ENDIAN,	"middleendian",	"Middle endian"),
+  DEFINE_(BIG_ENDIAN,		"bigendian",	"Big endian"),
 };
 
 static constexpr(int) n_common_feature_strings = sizeof(common_feature_strings) / sizeof(common_feature_strings[0]);

@@ -63,6 +63,8 @@ typedef enum {
   CPUINFO_VENDOR_PASEMI
 } cpuinfo_vendor_t;
 
+void cpuinfo_get_endian(struct cpuinfo *cip);
+
 // Get processor vendor ID 
 extern int cpuinfo_get_vendor(cpuinfo_t *cip);
 
@@ -138,6 +140,9 @@ typedef enum {
   CPUINFO_FEATURE_SIMD,
   CPUINFO_FEATURE_POPCOUNT,
   CPUINFO_FEATURE_CRYPTO,
+  CPUINFO_FEATURE_LITTLE_ENDIAN,
+  CPUINFO_FEATURE_BIG_ENDIAN,
+  CPUINFO_FEATURE_MIDDLE_ENDIAN,
   CPUINFO_FEATURE_COMMON_MAX,
 
   CPUINFO_FEATURE_X86	= CPUINFO_CLASS('X'),

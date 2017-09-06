@@ -529,7 +529,7 @@ static const cpuinfo_feature_string_t arm_feature_strings[] = {
   DEFINE_(ARM_HALF,	 	"half",		"Half-word loads and stores"),
   DEFINE_(ARM_THUMB,	 	"thumb",	"Thumb (16-bit instruction set)"),
   DEFINE_(ARM_26BIT,		"26bit",	"26-bit Model (26^2 Program Counter & Status Register"),
-  DEFINE_(ARM_FAST_MULT, 	"fast_mult",	"32×32->64-bit multiplication"),
+  DEFINE_(ARM_FAST_MULT, 	"fastmult",	"32×32->64-bit multiplication"),
   DEFINE_(ARM_FPA,	 	"fpa",		"Floating point accelerator"),
   DEFINE_(ARM_VFP,	 	"vfp",		"Vector Floating Point instruction extension"),
   DEFINE_(ARM_EDSP,	 	"edsp",		"Digital Signal Processing enhancement"),

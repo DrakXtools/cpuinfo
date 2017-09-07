@@ -45,7 +45,7 @@ cpuinfo_feature_t cpuinfo_feature_architecture = CPUINFO_FEATURE_AARCH64,
 // Arch-dependent data
 struct arm_cpuinfo {
 #ifdef __arm__
-  uint32_t features[CPUINFO_FEATURES_SZ_(ARM)];
+  uint32_t features[CPUINFO_FEATURES_SZ_(ARM)+sizeof(uint32_t)];
 #else
   uint32_t features[CPUINFO_FEATURES_SZ_(AARCH64)];
 #endif

@@ -28,6 +28,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <fcntl.h>
+#define _BSD_SOURCE             /* See feature_test_macros(7) */
+#include <endian.h>
 
 
 #include "cpuinfo.h"
@@ -692,13 +694,16 @@ char * read_sys_str(const char *path) {
     char syspath[sizeof("/sys/")+strlen(path)];
     stpcpy(stpcpy(syspath, "/sys/"), path);
     struct stat sb;
+    ssize_t rd = -1;
+
     if (stat(syspath, &sb) == -1) {
 	perror("stat failed: ");
 	return NULL;
     }
     int fd = open(syspath, O_RDONLY);
     char buf[sb.st_size];
-    if (read(fd, buf, sb.st_size) == -1) {
+    memset(buf, 0, sizeof(buf));
+    if ((rd = read(fd, buf, sb.st_size) == -1)) {
        perror("read failed: ");
        close(fd);
        return NULL;
@@ -710,6 +715,14 @@ char * read_sys_str(const char *path) {
 }
 
 int read_sys_int(const char *syspath) {
+    char *buf = read_sys_str(syspath);
+
+    int ret = htobe32(*buf);
+    free(buf);
+
+    return ret;
+}
+int read_sys_int_str(const char *syspath) {
     char *buf = read_sys_str(syspath);
 
     int ret = atoi(buf);

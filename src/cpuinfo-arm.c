@@ -93,7 +93,8 @@ char *cpuinfo_arch_get_model(struct cpuinfo *cip)
 // Get processor frequency in MHz
 int cpuinfo_arch_get_frequency(struct cpuinfo *cip)
 {
-    return 0;
+    int freq = read_sys_int("bus/cpu/devices/cpu0/of_node/clock-frequency");
+    return freq/1000000;
 }
 
 int cpuinfo_arch_get_socket(struct cpuinfo *cip)
@@ -104,7 +105,7 @@ int cpuinfo_arch_get_socket(struct cpuinfo *cip)
 // Get number of cores per CPU package
 int cpuinfo_arch_get_cores(struct cpuinfo *cip)
 {
-    int cores = read_sys_int("devices/system/cpu/kernel_max");
+    int cores = read_sys_int_str("devices/system/cpu/kernel_max");
 
     return ++cores;
 }

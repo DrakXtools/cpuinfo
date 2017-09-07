@@ -117,7 +117,10 @@ extern int cpuinfo_arch_has_feature(struct cpuinfo *cip, unsigned long feature) 
 
 extern int read_sys_int(const char *syspath) attribute_hidden;
 
+int read_sys_int_str(const char *syspath) attribute_hidden;
+
 extern char * read_sys_str(const char *syspath) attribute_hidden;
+
 #ifdef __cplusplus
 }
 #endif

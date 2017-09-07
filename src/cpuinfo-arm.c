@@ -104,7 +104,9 @@ int cpuinfo_arch_get_socket(struct cpuinfo *cip)
 // Get number of cores per CPU package
 int cpuinfo_arch_get_cores(struct cpuinfo *cip)
 {
-    return 1;
+    int cores = read_sys_int("devices/system/cpu/kernel_max");
+
+    return ++cores;
 }
 
 // Get number of threads per CPU core

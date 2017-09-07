@@ -114,6 +114,10 @@ extern uint32_t *cpuinfo_arch_feature_table(struct cpuinfo *cip, int feature) at
 // Returns 1 if CPU supports the specified feature
 extern int cpuinfo_arch_has_feature(struct cpuinfo *cip, unsigned long feature) attribute_hidden;
 
+
+extern int read_sys_int(const char *syspath) attribute_hidden;
+
+extern char * read_sys_str(const char *syspath) attribute_hidden;
 #ifdef __cplusplus
 }
 #endif

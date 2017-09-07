@@ -23,6 +23,13 @@
 #include <setjmp.h>
 #include <assert.h>
 #include <stdalign.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <fcntl.h>
+
+
 #include "cpuinfo.h"
 #include "cpuinfo-private.h"
 
@@ -679,4 +686,34 @@ int (cpuinfo_list_insert)(cpuinfo_list_t *lp, const void *ptr, int size)
   memcpy((void *)p->data, ptr, size);
   *lp = p;
   return 0;
+}
+
+char * read_sys_str(const char *path) {
+    char syspath[sizeof("/sys/")+strlen(path)];
+    stpcpy(stpcpy(syspath, "/sys/"), path);
+    struct stat sb;
+    if (stat(syspath, &sb) == -1) {
+	perror("stat failed: ");
+	return NULL;
+    }
+    int fd = open(syspath, O_RDONLY);
+    char buf[sb.st_size];
+    if (read(fd, buf, sb.st_size) == -1) {
+       perror("read failed: ");
+       close(fd);
+       return NULL;
+    }
+
+    close(fd);
+
+    return strdup(buf);
+}
+
+int read_sys_int(const char *syspath) {
+    char *buf = read_sys_str(syspath);
+
+    int ret = atoi(buf);
+    free(buf);
+
+    return ret;
 }

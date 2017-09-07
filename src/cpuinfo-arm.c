@@ -87,7 +87,7 @@ int cpuinfo_arch_get_vendor(struct cpuinfo *cip)
 // Get processor name
 char *cpuinfo_arch_get_model(struct cpuinfo *cip)
 {
-    return NULL;
+    return read_sys_str("devices/system/cpu/cpu0/of_node/compatible");
 }
 
 // Get processor frequency in MHz
